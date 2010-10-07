@@ -1,0 +1,87 @@
+#include "pane.h"
+#include "layout.h"
+
+LYTPane::LYTPane(LYTLayout &layout) : m_layout(layout) {
+	this->parent = 0;
+}
+
+LYTPane::~LYTPane() {
+	foreach (LYTPane *ptr, this->children)
+		delete ptr;
+}
+
+LYTPane *LYTPane::findPaneByName(QString name, bool recursive) {
+	foreach (LYTPane *pane, this->children) {
+		if (pane->name == name)
+			return pane;
+
+		if (recursive) {
+			LYTPane *tryThis = pane->findPaneByName(name, recursive);
+			if (tryThis != 0)
+				return tryThis;
+		}
+	}
+
+	return 0;
+}
+
+LYTLayout &LYTPane::layout() const {
+	return m_layout;
+}
+
+
+void LYTPane::dumpToDebug(bool showHeading) {
+	if (showHeading)
+		qDebug() << "LYTPane" << name << "@" << (void*)this;
+
+	qDebug() << "- Translation:" << xTrans << "," << yTrans << "," << zTrans;
+	qDebug() << "- Rotation:" << xRot << "," << yRot << "," << zRot;
+	qDebug() << "- Scale:" << xScale << "," << yScale;
+	qDebug() << "- Size:" << width << "x" << height;
+	qDebug() << "- Flags:" << flags << "- Origin:" << origin;
+	qDebug() << "- Alpha:" << alpha << "- Userdata:" << userdata;
+}
+
+
+
+void LYTPane::writeToDataStream(QDataStream &out) {
+	out << (quint8)flags;
+	out << (quint8)origin;
+	out << (quint8)alpha;
+	out.skipRawData(1); // padding
+
+	WriteFixedLengthASCII(out, name, 0x10);
+	WriteFixedLengthASCII(out, userdata, 8);
+
+	out << (float)xTrans;
+	out << (float)yTrans;
+	out << (float)zTrans;
+	out << (float)xRot;
+	out << (float)yRot;
+	out << (float)zRot;
+	out << (float)xScale;
+	out << (float)yScale;
+	out << (float)width;
+	out << (float)height;
+}
+
+void LYTPane::readFromDataStream(QDataStream &in) {
+	in >> (quint8&)flags;
+	in >> (quint8&)origin;
+	in >> (quint8&)alpha;
+	in.skipRawData(1); // padding
+
+	name = ReadFixedLengthASCII(in, 0x10);
+	userdata = ReadFixedLengthASCII(in, 8);
+
+	in >> (float&)xTrans;
+	in >> (float&)yTrans;
+	in >> (float&)zTrans;
+	in >> (float&)xRot;
+	in >> (float&)yRot;
+	in >> (float&)zRot;
+	in >> (float&)xScale;
+	in >> (float&)yScale;
+	in >> (float&)width;
+	in >> (float&)height;
+}

@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="bounding">icons/bounding.png</file>
+        <file alias="pane">icons/pane.png</file>
+        <file alias="picture">icons/picture.png</file>
+        <file alias="textbox">icons/textbox.png</file>
+        <file alias="window">icons/window.png</file>
+    </qresource>
+</RCC>
