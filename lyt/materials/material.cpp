@@ -44,7 +44,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 	}
 
 	// TexSRT
-	/*texSRTs.clear();
+	texSRTs.clear();
 
 	for (int i = 0; i < resourceNum.getTexSRTNum(); i++) {
 		this->readTexSRT(in);
@@ -58,7 +58,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 	}
 
 	// ChanCtrl
-	if (resourceNum.hasChanCtrl()) {
+	/*if (resourceNum.hasChanCtrl()) {
 		this->hasChanCtrl = true;
 		this->readChanCtrl(in);
 	} else {
@@ -124,4 +124,17 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 void LYTMaterial::readTexMap(QDataStream &in) {
 	this->texMaps.append(LYTTexMap());
 	this->texMaps.last().readFromDataStream(in, m_layout);
+	this->texMaps.last().dumpToDebug();
+}
+
+void LYTMaterial::readTexSRT(QDataStream &in) {
+	this->texSRTs.append(LYTTexSRT());
+	this->texSRTs.last().readFromDataStream(in);
+	this->texSRTs.last().dumpToDebug();
+}
+
+void LYTMaterial::readTexCoordGen(QDataStream &in) {
+	this->texCoordGens.append(LYTTexCoordGen());
+	this->texCoordGens.last().readFromDataStream(in);
+	this->texCoordGens.last().dumpToDebug();
 }

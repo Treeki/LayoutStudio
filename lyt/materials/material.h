@@ -8,6 +8,8 @@
 
 #include "../common.h"
 #include "texmap.h"
+#include "texsrt.h"
+#include "texcoordgen.h"
 
 class LYTLayout;
 
@@ -31,18 +33,6 @@ public:
 
 
 
-class LYTTexCoordGen {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-	quint8 genType;
-	quint8 src;
-	quint8 mtx;
-};
-
 class LYTChanCtrl {
 public:
 	void writeToDataStream(QDataStream &out);
@@ -65,20 +55,6 @@ public:
 	int green;
 	int blue;
 	int alpha;
-};
-
-class LYTTexSRT {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-	float xTrans;
-	float yTrans;
-	float rotate;
-	float xScale;
-	float yScale;
 };
 
 class LYTIndirectStage {

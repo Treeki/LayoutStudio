@@ -20,7 +20,9 @@ SOURCES += main.cpp \
     lyt/window.cpp \
     lyt/bounding.cpp \
     lyt/group.cpp \
-    lyt/materials/texmap.cpp
+    lyt/materials/texmap.cpp \
+    lyt/materials/texsrt.cpp \
+    lyt/materials/texcoordgen.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -36,7 +38,9 @@ HEADERS += lsmainwindow.h \
     lyt/window.h \
     lyt/bounding.h \
     lyt/group.h \
-    lyt/materials/texmap.h
+    lyt/materials/texmap.h \
+    lyt/materials/texsrt.h \
+    lyt/materials/texcoordgen.h
 FORMS += lsmainwindow.ui
 RESOURCES += resources.qrc
 
@@ -45,4 +49,5 @@ OTHER_FILES += \
     icons/textbox.png \
     icons/picture.png \
     icons/pane.png \
-    icons/bounding.png
+    icons/bounding.png \
+    README.markdown
