@@ -50,4 +50,5 @@ OTHER_FILES += \
     icons/picture.png \
     icons/pane.png \
     icons/bounding.png \
-    README.markdown
+    README.markdown \
+    LICENSE.txt

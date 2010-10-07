@@ -31,3 +31,9 @@ Other Stuff
 
 Special thanks to megazig, trap15 and everyone else who worked on benzin.
 Greets to #HACKERCHANNEL and the Newer team :p
+
+Icons used in the GUI are from the Fugue set by [Yusuke Kamiyamane][yk].
+
+The project is licensed under the GNU General Public License v2.
+
+[yk]: http://p.yusukekamiyamane.com/
