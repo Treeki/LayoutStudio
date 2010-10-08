@@ -114,7 +114,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 		this->readIndirectStage(in);
 	}
 
-	/*// TevStage
+	// TevStage
 	tevStages.clear();
 
 	for (int i = 0; i < resourceNum.getTevStageNum(); i++) {
@@ -135,7 +135,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 		this->readBlendMode(in);
 	} else {
 		this->hasBlendMode = false;
-	}*/
+	}
 }
 
 
@@ -183,3 +183,20 @@ void LYTMaterial::readIndirectStage(QDataStream &in) {
 	this->indTexStages.last().readFromDataStream(in);
 	this->indTexStages.last().dumpToDebug();
 }
+
+void LYTMaterial::readTevStage(QDataStream &in) {
+	this->tevStages.append(LYTTevStage());
+	this->tevStages.last().readFromDataStream(in);
+	this->tevStages.last().dumpToDebug();
+}
+
+void LYTMaterial::readAlphaCompare(QDataStream &in) {
+	this->alphaCompare.readFromDataStream(in);
+	this->alphaCompare.dumpToDebug();
+}
+
+void LYTMaterial::readBlendMode(QDataStream &in) {
+	this->blendMode.readFromDataStream(in);
+	this->blendMode.dumpToDebug();
+}
+

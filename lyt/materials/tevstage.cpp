@@ -23,10 +23,82 @@ LYTTevStage::LYTTevStage() {
 
 void LYTTevStage::dumpToDebug() {
 	qDebug() << "LYTTevStage @" << (void*)this;
+	qDebug() << "TEV order: texCoord" << texCoord << ", colour" << colour << ", texMap" << texMap;
+	qDebug() << "SwapMode: ras" << rasSwapMode << ", tex" << texSwapMode;
+
+	qDebug() << "Colour In:" << colourInA << colourInB << colourInC << colourInD;
+	qDebug() << "Op:" << colourOp << ", Bias:" << colourBias << ", Scale:" << colourScale;
+	qDebug() << "Clamp:" << colourClamp << ", OutReg:" << colourOutReg;
+
+	qDebug() << "Alpha In:" << alphaInA << alphaInB << alphaInC << alphaInD;
+	qDebug() << "Op:" << alphaOp << ", Bias:" << alphaBias << ", Scale:" << alphaScale;
+	qDebug() << "Clamp:" << alphaClamp << ", OutReg:" << alphaOutReg;
+
+	qDebug() << "Colour Const:" << colourConst << ", Alpha Const:" << alphaConst;
+
+	qDebug() << "Indirect Stage:" << indStage << ", Format:" << indFormat;
+	qDebug() << "Bias:" << indBias << ", Matrix:" << indMatrix;
+	qDebug() << "WrapS:" << indWrapS << ", WrapT:" << indWrapT << ", AddPrev:" << indAddPrev;
+	qDebug() << "UtcLod:" << indUtcLod << ", AlphaSel:" << indAlphaSel;
 }
 
 
 void LYTTevStage::writeToDataStream(QDataStream &out) {
+	char data[0x10];
+	qMemSet(data, 0, 0x10);
+
+	// TEV order:
+	data[0] = texCoord;
+	colour = data[1];
+	data[2] = texMap & 0xFF;
+	data[3] = BitInsert(data[3], texMap >> 8, 1, 32 - 1);
+
+	// SwapMode:
+	data[3] = BitInsert(data[3], rasSwapMode, 2, 32 - 3);
+	data[3] = BitInsert(data[3], texSwapMode, 2, 32 - 5);
+
+	// Colour In:
+	data[4] = BitInsert(data[4], colourInA, 4, 32 - 4);
+	data[4] = BitInsert(data[4], colourInB, 4, 32 - 8);
+	data[5] = BitInsert(data[5], colourInC, 4, 32 - 4);
+	data[5] = BitInsert(data[5], colourInD, 4, 32 - 8);
+
+	// Colour Op:
+	data[6] = BitInsert(data[6], colourOp, 4, 32 - 4);
+	data[6] = BitInsert(data[6], colourBias, 2, 32 - 6);
+	data[6] = BitInsert(data[6], colourScale, 2, 32 - 8);
+	data[7] = BitInsert(data[7], colourClamp, 1, 32 - 1);
+	data[7] = BitInsert(data[7], colourOutReg, 2, 32 - 3);
+
+	// Alpha In:
+	data[8] = BitInsert(data[8], alphaInA, 4, 32 - 4);
+	data[8] = BitInsert(data[8], alphaInB, 4, 32 - 8);
+	data[9] = BitInsert(data[9], alphaInC, 4, 32 - 4);
+	data[9] = BitInsert(data[9], alphaInD, 4, 32 - 8);
+
+	// Alpha Op:
+	data[10] = BitInsert(data[10], alphaOp, 4, 32 - 4);
+	data[10] = BitInsert(data[10], alphaBias, 2, 32 - 6);
+	data[10] = BitInsert(data[10], alphaScale, 2, 32 - 8);
+	data[11] = BitInsert(data[11], alphaClamp, 1, 32 - 1);
+	data[11] = BitInsert(data[11], alphaOutReg, 2, 32 - 3);
+
+	// Constants:
+	data[7] = BitInsert(data[7], colourConst, 5, 32 - 8);
+	data[11] = BitInsert(data[11], alphaConst, 5, 32 - 8);
+
+	// Indirect:
+	data[12] = indStage;
+	data[15] = BitInsert(data[15], indFormat, 2, 32 - 2);
+	data[13] = BitInsert(data[13], indBias, 3, 32 - 3);
+	data[13] = BitInsert(data[13], indMatrix, 4, 32 - 7);
+	data[14] = BitInsert(data[14], indWrapS, 3, 32 - 3);
+	data[14] = BitInsert(data[14], indWrapT, 3, 32 - 6);
+	data[15] = BitInsert(data[15], indAddPrev, 1, 32 - 3);
+	data[15] = BitInsert(data[15], indUtcLod, 1, 32 - 4);
+	data[15] = BitInsert(data[15], indAlphaSel, 2, 32 - 6);
+
+	out.writeRawData(data, 0x10);
 }
 
 

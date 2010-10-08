@@ -31,6 +31,8 @@
 #include "tevswaptable.h"
 #include "indirectstage.h"
 #include "tevstage.h"
+#include "alphacompare.h"
+#include "blendmode.h"
 
 
 class LYTLayout;
@@ -53,25 +55,6 @@ public:
 	inline  int getTevStageNum()	{ return BitExtract(value, 5, 9);  }
 };
 
-
-
-class LYTAlphaCompare {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-};
-
-class LYTBlendMode {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-};
 
 
 

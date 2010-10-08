@@ -28,7 +28,8 @@ GX GPU emulation in the [Dolphin][dol] GameCube/Wii emulator.
 
 ### Current (Short-Term) TODO ###
 - Disassemble code that sets up indirect textures for materials
-- Finish other material structs (plus writing)
+- Test code for material structs
+- Add usd1 handling
 - Add LYTLayout packing
 - Add U8 archive support
 - Add TPL file support

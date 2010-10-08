@@ -49,6 +49,20 @@ inline quint32 BitExtract(quint32 value, int count, int start) {
 	return (value & mask) >> (32 - (start + count));
 }
 
+inline quint32 BitInsert(quint32 value, int newValue, int count, int start) {
+	quint32 mask = 0;
+	for (int i = start; i < start+count; i++) {
+		mask |= (0x80000000 >> i);
+	}
+
+	value &= ~mask;
+	value |= (newValue << (32 - (start + count))) & mask;
+	return value;
+}
+
+
+
+
 
 QByteArray PadByteArray(QByteArray original, int newLength, char padWith='\0');
 

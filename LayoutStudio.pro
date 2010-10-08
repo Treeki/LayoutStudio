@@ -26,7 +26,9 @@ SOURCES += main.cpp \
     lyt/materials/chanctrl.cpp \
     lyt/materials/tevswaptable.cpp \
     lyt/materials/indirectstage.cpp \
-    lyt/materials/tevstage.cpp
+    lyt/materials/tevstage.cpp \
+    lyt/materials/alphacompare.cpp \
+    lyt/materials/blendmode.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -48,7 +50,9 @@ HEADERS += lsmainwindow.h \
     lyt/materials/chanctrl.h \
     lyt/materials/tevswaptable.h \
     lyt/materials/indirectstage.h \
-    lyt/materials/tevstage.h
+    lyt/materials/tevstage.h \
+    lyt/materials/alphacompare.h \
+    lyt/materials/blendmode.h
 FORMS += lsmainwindow.ui
 RESOURCES += resources.qrc
 
