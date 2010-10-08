@@ -30,6 +30,10 @@ public:
 
 	void dumpToDebug();
 
+	int texCoord;
+	int texMap;
+	int wrap_s;
+	int wrap_t;
 };
 
 
