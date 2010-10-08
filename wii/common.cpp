@@ -107,3 +107,4 @@ void WriteFixedLengthASCII(QDataStream &out, QString str, int length) {
 	out.writeRawData(paddedStr.constData(), paddedStr.length());
 }
 
+

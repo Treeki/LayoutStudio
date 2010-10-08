@@ -40,19 +40,37 @@ class LYTLayout;
 
 class LYTMaterialResourceNum {
 public:
-	quint32 value;
+	LYTMaterialResourceNum() : m_value(0) { }
+	LYTMaterialResourceNum(int initValue) : m_value(initValue) { }
 
-	inline  int getTexMapNum()		{ return BitExtract(value, 4, 28); }
-	inline  int getTexSRTNum()		{ return BitExtract(value, 4, 24); }
-	inline  int getTexCoordGenNum()	{ return BitExtract(value, 4, 20); }
-	inline bool hasChanCtrl()		{ return BitExtract(value, 1, 6);  }
-	inline bool hasMatCol()			{ return BitExtract(value, 1, 4);  }
-	inline bool hasTevSwapTable()	{ return BitExtract(value, 1, 19); }
-	inline bool hasAlphaCompare()	{ return BitExtract(value, 1, 8);  }
-	inline bool hasBlendMode()		{ return BitExtract(value, 1, 7);  }
-	inline  int getIndTexSRTNum()	{ return BitExtract(value, 2, 17); }
-	inline  int getIndTexStageNum()	{ return BitExtract(value, 3, 14); }
-	inline  int getTevStageNum()	{ return BitExtract(value, 5, 9);  }
+	quint32 value() { return m_value; }
+
+	int getTexMapNum()		{ return BitExtract(m_value, 4, 28); }
+	int getTexSRTNum()		{ return BitExtract(m_value, 4, 24); }
+	int getTexCoordGenNum()	{ return BitExtract(m_value, 4, 20); }
+	bool hasChanCtrl()		{ return BitExtract(m_value, 1, 6);  }
+	bool hasMatCol()		{ return BitExtract(m_value, 1, 4);  }
+	bool hasTevSwapTable()	{ return BitExtract(m_value, 1, 19); }
+	bool hasAlphaCompare()	{ return BitExtract(m_value, 1, 8);  }
+	bool hasBlendMode()		{ return BitExtract(m_value, 1, 7);  }
+	int getIndTexSRTNum()	{ return BitExtract(m_value, 2, 17); }
+	int getIndTexStageNum()	{ return BitExtract(m_value, 3, 14); }
+	int getTevStageNum()	{ return BitExtract(m_value, 5, 9);  }
+
+	void setTexMapNum(int v)		{ m_value = BitInsert(m_value, v, 4, 28); }
+	void setTexSRTNum(int v)		{ m_value = BitInsert(m_value, v, 4, 24); }
+	void setTexCoordGenNum(int v)	{ m_value = BitInsert(m_value, v, 4, 20); }
+	void setHasChanCtrl(bool v)		{ m_value = BitInsert(m_value, v, 1, 6); }
+	void setHasMatCol(bool v)		{ m_value = BitInsert(m_value, v, 1, 4); }
+	void setHasTevSwapTable(bool v)	{ m_value = BitInsert(m_value, v, 1, 19); }
+	void setHasAlphaCompare(bool v)	{ m_value = BitInsert(m_value, v, 1, 8); }
+	void setHasBlendMode(bool v)	{ m_value = BitInsert(m_value, v, 1, 7); }
+	void setIndTexSRTNum(int v)		{ m_value = BitInsert(m_value, v, 2, 17); }
+	void setIndTexStageNum(int v)	{ m_value = BitInsert(m_value, v, 3, 14); }
+	void setTevStageNum(int v)		{ m_value = BitInsert(m_value, v, 5, 9); }
+
+private:
+	quint32 m_value;
 };
 
 
@@ -109,11 +127,6 @@ protected:
 	void readTexMap(QDataStream &in);
 	void readTexSRT(QDataStream &in);
 	void readTexCoordGen(QDataStream &in);
-	void readChanCtrl(QDataStream &in);
-	void readMatCol(QDataStream &in);
-	void readTevSwapTable(QDataStream &in);
-	void readAlphaCompare(QDataStream &in);
-	void readBlendMode(QDataStream &in);
 	void readIndirectStage(QDataStream &in);
 	void readIndTexSRT(QDataStream &in);
 	void readTevStage(QDataStream &in);

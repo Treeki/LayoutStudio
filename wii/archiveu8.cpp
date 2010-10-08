@@ -15,26 +15,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#ifndef LYTINDIRECTSTAGE_H
-#define LYTINDIRECTSTAGE_H
-
-#include "../common.h"
-#include <QtCore/QDataStream>
-
-class LYTIndirectStage {
-public:
-	LYTIndirectStage();
-
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-	quint8 texCoord;
-	quint8 texMap;
-	quint8 wrap_s;
-	quint8 wrap_t;
-};
+#include "archiveu8.h"
 
 
-#endif // LYTINDIRECTSTAGE_H

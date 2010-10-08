@@ -15,26 +15,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
-#ifndef LYTINDIRECTSTAGE_H
-#define LYTINDIRECTSTAGE_H
+#ifndef WIIARCHIVEU8_H
+#define WIIARCHIVEU8_H
 
-#include "../common.h"
-#include <QtCore/QDataStream>
+#include "common.h"
+#include "filesystem.h"
 
-class LYTIndirectStage {
+
+
+
+class WiiArchiveU8 {
 public:
-	LYTIndirectStage();
+	WiiArchiveU8();
+	WiiArchiveU8(QDataStream &stream);
+
+	WiiDirectory root;
 
 	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-	quint8 texCoord;
-	quint8 texMap;
-	quint8 wrap_s;
-	quint8 wrap_t;
 };
 
-
-#endif // LYTINDIRECTSTAGE_H
+#endif // WIIARCHIVEU8_H

@@ -28,8 +28,10 @@ int main(int argc, char *argv[]) {
 
 	LSGlobals::setup();
 
-	LYTDirectoryPackage package("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue\\arc");
-	LYTLayout layout(package, "continue_05.brlyt");
+	//LYTDirectoryPackage package("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue\\arc");
+	//LYTLayout layout(package, "continue_05.brlyt");
+	LYTDirectoryPackage package("H:\\ISOs\\TP\\banner\\arc_extr");
+	LYTLayout layout(package, "banner.brlyt");
 
     LSMainWindow w;
     w.show();

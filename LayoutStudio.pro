@@ -14,7 +14,6 @@ SOURCES += main.cpp \
     lyt/binaryfilesection.cpp \
     lyt/materials/material.cpp \
     lyt/pane.cpp \
-    lyt/common.cpp \
     lyt/textbox.cpp \
     lyt/picture.cpp \
     lyt/window.cpp \
@@ -28,7 +27,10 @@ SOURCES += main.cpp \
     lyt/materials/indirectstage.cpp \
     lyt/materials/tevstage.cpp \
     lyt/materials/alphacompare.cpp \
-    lyt/materials/blendmode.cpp
+    lyt/materials/blendmode.cpp \
+    wii/common.cpp \
+    wii/archiveu8.cpp \
+    wii/filesystem.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -52,7 +54,10 @@ HEADERS += lsmainwindow.h \
     lyt/materials/indirectstage.h \
     lyt/materials/tevstage.h \
     lyt/materials/alphacompare.h \
-    lyt/materials/blendmode.h
+    lyt/materials/blendmode.h \
+    wii/archiveu8.h \
+    wii/common.h \
+    wii/filesystem.h
 FORMS += lsmainwindow.ui
 RESOURCES += resources.qrc
 
