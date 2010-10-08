@@ -29,7 +29,8 @@
 #include "texcoordgen.h"
 #include "chanctrl.h"
 #include "tevswaptable.h"
-#include "indtexstage.h"
+#include "indirectstage.h"
+#include "tevstage.h"
 
 
 class LYTLayout;
@@ -53,15 +54,6 @@ public:
 };
 
 
-
-class LYTTevStage {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-};
 
 class LYTAlphaCompare {
 public:

@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     lyt/materials/texcoordgen.cpp \
     lyt/materials/chanctrl.cpp \
     lyt/materials/tevswaptable.cpp \
-    lyt/materials/indirectstage.cpp
+    lyt/materials/indirectstage.cpp \
+    lyt/materials/tevstage.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -46,7 +47,8 @@ HEADERS += lsmainwindow.h \
     lyt/materials/texcoordgen.h \
     lyt/materials/chanctrl.h \
     lyt/materials/tevswaptable.h \
-    lyt/materials/indirectstage.h
+    lyt/materials/indirectstage.h \
+    lyt/materials/tevstage.h
 FORMS += lsmainwindow.ui
 RESOURCES += resources.qrc
 
