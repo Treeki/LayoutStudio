@@ -1,5 +1,5 @@
 LayoutStudio Readme
--------------------
+===================
 
 LayoutStudio is a work-in-progress application written by Treeki which plans to
 offer graphical editing of Wii NW4R layouts/banners (.brlyt/.brlan files) with
@@ -23,7 +23,15 @@ GX GPU emulation in the [Dolphin][dol] GameCube/Wii emulator.
 - BRLAN reading/writing
 - Graphical interface for editing layouts and animations
 - Rendering of layouts using OpenGL and Dolphin's GX emulation
+- BRFNT support
 
+
+### Current (Short-Term) TODO ###
+- Disassemble code that sets up indirect textures for materials
+- Finish other material structs (plus writing)
+- Add LYTLayout packing
+- Add U8 archive support
+- Add TPL file support
 
 
 Other Stuff

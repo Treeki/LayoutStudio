@@ -22,7 +22,10 @@ SOURCES += main.cpp \
     lyt/group.cpp \
     lyt/materials/texmap.cpp \
     lyt/materials/texsrt.cpp \
-    lyt/materials/texcoordgen.cpp
+    lyt/materials/texcoordgen.cpp \
+    lyt/materials/chanctrl.cpp \
+    lyt/materials/tevswaptable.cpp \
+    lyt/materials/indirectstage.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -40,7 +43,10 @@ HEADERS += lsmainwindow.h \
     lyt/group.h \
     lyt/materials/texmap.h \
     lyt/materials/texsrt.h \
-    lyt/materials/texcoordgen.h
+    lyt/materials/texcoordgen.h \
+    lyt/materials/chanctrl.h \
+    lyt/materials/tevswaptable.h \
+    lyt/materials/indirectstage.h
 FORMS += lsmainwindow.ui
 RESOURCES += resources.qrc
 

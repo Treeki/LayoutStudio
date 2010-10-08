@@ -31,6 +31,8 @@ LYTLayout &LYTMaterial::layout() const {
 
 void LYTMaterial::dumpToDebug() {
 	qDebug() << "LYTMaterial" << name << "@" << (void*)this;
+	// todo: move dumpToDebug calls for the various Material structs out of
+	// LYTMaterial::read...() and put them here, since it makes more sense
 }
 
 
@@ -75,7 +77,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 	}
 
 	// ChanCtrl
-	/*if (resourceNum.hasChanCtrl()) {
+	if (resourceNum.hasChanCtrl()) {
 		this->hasChanCtrl = true;
 		this->readChanCtrl(in);
 	} else {
@@ -112,7 +114,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 		this->readIndirectStage(in);
 	}
 
-	// TevStage
+	/*// TevStage
 	tevStages.clear();
 
 	for (int i = 0; i < resourceNum.getTevStageNum(); i++) {
@@ -154,4 +156,30 @@ void LYTMaterial::readTexCoordGen(QDataStream &in) {
 	this->texCoordGens.append(LYTTexCoordGen());
 	this->texCoordGens.last().readFromDataStream(in);
 	this->texCoordGens.last().dumpToDebug();
+}
+
+void LYTMaterial::readChanCtrl(QDataStream &in) {
+	this->chanCtrl.readFromDataStream(in);
+	this->chanCtrl.dumpToDebug();
+}
+
+void LYTMaterial::readMatCol(QDataStream &in) {
+	ReadRGBA8Color(this->matCol, in);
+}
+
+void LYTMaterial::readTevSwapTable(QDataStream &in) {
+	this->tevSwapTable.readFromDataStream(in);
+	this->tevSwapTable.dumpToDebug();
+}
+
+void LYTMaterial::readIndTexSRT(QDataStream &in) {
+	this->indTexSRTs.append(LYTTexSRT());
+	this->indTexSRTs.last().readFromDataStream(in);
+	this->indTexSRTs.last().dumpToDebug();
+}
+
+void LYTMaterial::readIndirectStage(QDataStream &in) {
+	this->indTexStages.append(LYTIndirectStage());
+	this->indTexStages.last().readFromDataStream(in);
+	this->indTexStages.last().dumpToDebug();
 }

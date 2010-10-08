@@ -27,6 +27,10 @@
 #include "texmap.h"
 #include "texsrt.h"
 #include "texcoordgen.h"
+#include "chanctrl.h"
+#include "tevswaptable.h"
+#include "indtexstage.h"
+
 
 class LYTLayout;
 
@@ -49,39 +53,6 @@ public:
 };
 
 
-
-class LYTChanCtrl {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-	quint8 colourMatSrc;
-	quint8 alphaMatSrc;
-};
-
-class LYTTevSwapMode {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-	int red;
-	int green;
-	int blue;
-	int alpha;
-};
-
-class LYTIndirectStage {
-public:
-	void writeToDataStream(QDataStream &out);
-	void readFromDataStream(QDataStream &in);
-
-	void dumpToDebug();
-
-};
 
 class LYTTevStage {
 public:
@@ -142,7 +113,7 @@ public:
 	QColor matCol;
 
 	bool hasTevSwapTable;
-	LYTTevSwapMode tevSwapTable;
+	LYTTevSwapTable tevSwapTable;
 
 	bool hasAlphaCompare;
 	LYTAlphaCompare alphaCompare;
