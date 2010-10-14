@@ -61,7 +61,8 @@ HEADERS += lsmainwindow.h \
     wii/common.h \
     wii/filesystem.h \
     lyt/archivepackage.h \
-    wii/stringtablebuilder.h
+    wii/stringtablebuilder.h \
+    lyt/materials/materialcontainer.h
 FORMS += lsmainwindow.ui
 RESOURCES += resources.qrc
 

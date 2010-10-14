@@ -21,16 +21,16 @@
 LYTChanCtrl::LYTChanCtrl() {
 }
 
-void LYTChanCtrl::dumpToDebug() {
+void LYTChanCtrl::dumpToDebug() const {
 	qDebug() << "LYTChanCtrl @" << (void*)this;
 	qDebug() << "ColourMatSrc:" << colourMatSrc << "- AlphaMatSrc:" << alphaMatSrc;
 }
 
 
-void LYTChanCtrl::writeToDataStream(QDataStream &out) {
+void LYTChanCtrl::writeToDataStream(QDataStream &out) const {
 	out << (quint8)colourMatSrc;
 	out << (quint8)alphaMatSrc;
-	out.skipRawData(2); // padding
+	WritePadding(2, out);
 }
 
 

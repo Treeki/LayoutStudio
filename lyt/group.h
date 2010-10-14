@@ -28,7 +28,7 @@ public:
     LYTGroup();
 
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in, LYTPane &linkedPane);
 
 	QString name;

@@ -25,11 +25,15 @@
 union Magic {
 	char str[4];
 	quint32 value;
+
+	Magic(quint32 v) : value(v) { }
 };
 
 union Version {
 	char str[2];
 	quint16 value;
+
+	Version(quint16 v) : value(v) { }
 };
 
 

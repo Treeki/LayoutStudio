@@ -20,6 +20,7 @@
 
 #include "packagebase.h"
 #include "materials/material.h"
+#include "materials/materialcontainer.h"
 #include "group.h"
 #include "pane.h"
 #include "textbox.h"
@@ -44,10 +45,14 @@ public:
 	void clear();
 	LYTPackageBase &package() const;
 
+	QByteArray pack();
+
+	quint8 flags;
+
 	float width;
 	float height;
 
-	QMap<QString, LYTMaterial *> materials;
+	LYTMaterialContainer materials;
 
 	LYTPane *rootPane;
 	QList<LYTGroup *> groups;
@@ -71,6 +76,13 @@ protected:
 	void readMat1(LYTBinaryFileSection &section);
 
 	LYTPane *createPaneObj(LYTBinaryFileSection &section);
+
+	QStringList generateTextureRefs() const;
+	QStringList generateFontRefs() const;
+
+	void writeMat1(LYTBinaryFileSection &section) const;
+	void writePane(LYTBinaryFile &file, LYTPane *pane) const;
+	void writeGroups(LYTBinaryFile &file) const;
 
 	friend class LYTPane;
 	friend class LYTTextBox;

@@ -40,7 +40,13 @@ int main(int argc, char *argv[]) {
 
 	LYTArchivePackage package("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue.arc");
 	LYTLayout layout(package, "continue_05.brlyt");
-	package.savePackage();
+	QByteArray brlyt = layout.pack();
+	QFile file("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue\\arc\\blyt\\continue_05_repack.brlyt");
+	file.open(QFile::WriteOnly);
+	file.write(brlyt);
+	file.close();
+	//package.writeLayout("continue_05.brlyt", brlyt);
+	//package.savePackage();
 
 
 	//LYTDirectoryPackage package("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue\\arc");

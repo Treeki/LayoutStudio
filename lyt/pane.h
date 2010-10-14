@@ -33,12 +33,16 @@ public:
 	virtual ~LYTPane();
 
 
-	virtual void writeToDataStream(QDataStream &out);
+	virtual Magic magic() const;
+
+	virtual void writeToDataStream(QDataStream &out) const;
 	virtual void readFromDataStream(QDataStream &in);
 
-	virtual void dumpToDebug(bool showHeading=true);
+	virtual void dumpToDebug(bool showHeading=true) const;
 
-	LYTPane *findPaneByName(QString name, bool recursive);
+	virtual void addFontRefsToList(QStringList &list) const;
+
+	LYTPane *findPaneByName(QString name, bool recursive) const;
 
 	LYTLayout &layout() const;
 

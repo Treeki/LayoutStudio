@@ -23,12 +23,12 @@ LYTGroup::LYTGroup() {
 
 
 
-void LYTGroup::writeToDataStream(QDataStream &out) {
+void LYTGroup::writeToDataStream(QDataStream &out) const {
 	WriteFixedLengthASCII(out, name, 0x10);
 
 	// write the contents
 	out << (quint16)panes.count();
-	out.skipRawData(2); // padding
+	WritePadding(2, out);
 
 	foreach (LYTPane *pane, panes) {
 		WriteFixedLengthASCII(out, pane->name, 0x10);

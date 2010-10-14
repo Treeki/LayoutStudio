@@ -26,7 +26,7 @@ LYTDirectoryPackage::LYTDirectoryPackage(QString path) : LYTPackageBase() {
 
 
 
-QStringList LYTDirectoryPackage::listSubDirIfExists(QString dirName) {
+QStringList LYTDirectoryPackage::listSubDirIfExists(QString dirName) const {
 	QDir search(m_path);
 
 	if (search.cd(dirName)) {
@@ -37,7 +37,7 @@ QStringList LYTDirectoryPackage::listSubDirIfExists(QString dirName) {
 }
 
 
-QByteArray LYTDirectoryPackage::getFileFromSubDirIfExists(QString dirName, QString fileName) {
+QByteArray LYTDirectoryPackage::getFileFromSubDirIfExists(QString dirName, QString fileName) const {
 	QDir search(m_path);
 
 	if (search.cd(dirName)) {
@@ -71,37 +71,37 @@ bool LYTDirectoryPackage::writeFileToSubDir(QString dirName, QString fileName, Q
 
 
 
-QStringList LYTDirectoryPackage::listAnims() {
+QStringList LYTDirectoryPackage::listAnims() const {
 	return this->listSubDirIfExists("anim");
 }
 
-QStringList LYTDirectoryPackage::listLayouts() {
+QStringList LYTDirectoryPackage::listLayouts() const {
 	return this->listSubDirIfExists("blyt");
 }
 
-QStringList LYTDirectoryPackage::listTextures() {
+QStringList LYTDirectoryPackage::listTextures() const {
 	return this->listSubDirIfExists("timg");
 }
 
-QStringList LYTDirectoryPackage::listFonts() {
+QStringList LYTDirectoryPackage::listFonts() const {
 	return this->listSubDirIfExists("font");
 }
 
 
 
-QByteArray LYTDirectoryPackage::getAnim(QString name) {
+QByteArray LYTDirectoryPackage::getAnim(QString name) const {
 	return this->getFileFromSubDirIfExists("anim", name);
 }
 
-QByteArray LYTDirectoryPackage::getLayout(QString name) {
+QByteArray LYTDirectoryPackage::getLayout(QString name) const {
 	return this->getFileFromSubDirIfExists("blyt", name);
 }
 
-QByteArray LYTDirectoryPackage::getTexture(QString name) {
+QByteArray LYTDirectoryPackage::getTexture(QString name) const {
 	return this->getFileFromSubDirIfExists("timg", name);
 }
 
-QByteArray LYTDirectoryPackage::getFont(QString name) {
+QByteArray LYTDirectoryPackage::getFont(QString name) const {
 	return this->getFileFromSubDirIfExists("font", name);
 }
 
@@ -131,6 +131,6 @@ bool LYTDirectoryPackage::savePackage() {
 }
 
 
-QString LYTDirectoryPackage::description() {
+QString LYTDirectoryPackage::description() const {
 	return m_path;
 }

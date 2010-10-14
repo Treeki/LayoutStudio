@@ -40,17 +40,17 @@ LYTArchivePackage::~LYTArchivePackage() {
 
 
 
-WiiArchiveU8 *LYTArchivePackage::archive() {
+WiiArchiveU8 *LYTArchivePackage::archive() const {
 	return m_archive;
 }
 
-QString LYTArchivePackage::filename() {
+QString LYTArchivePackage::filename() const {
 	return m_filename;
 }
 
 
 
-QStringList LYTArchivePackage::listSubDirIfExists(QString dirName) {
+QStringList LYTArchivePackage::listSubDirIfExists(QString dirName) const {
 	WiiFSObject *obj = this->m_archive->root.resolvePath(dirName);
 
 	if (obj && obj->isDirectory()) {
@@ -67,7 +67,7 @@ QStringList LYTArchivePackage::listSubDirIfExists(QString dirName) {
 }
 
 
-QByteArray LYTArchivePackage::getFileFromSubDirIfExists(QString dirName, QString fileName) {
+QByteArray LYTArchivePackage::getFileFromSubDirIfExists(QString dirName, QString fileName) const {
 	WiiFSObject *obj = this->m_archive->root.resolvePath(QString("%1/%2").arg(dirName, fileName));
 
 	if (obj && obj->isFile()) {
@@ -92,37 +92,37 @@ bool LYTArchivePackage::writeFileToSubDir(QString dirName, QString fileName, QBy
 
 
 
-QStringList LYTArchivePackage::listAnims() {
+QStringList LYTArchivePackage::listAnims() const {
 	return this->listSubDirIfExists("arc/anim");
 }
 
-QStringList LYTArchivePackage::listLayouts() {
+QStringList LYTArchivePackage::listLayouts() const {
 	return this->listSubDirIfExists("arc/blyt");
 }
 
-QStringList LYTArchivePackage::listTextures() {
+QStringList LYTArchivePackage::listTextures() const {
 	return this->listSubDirIfExists("arc/timg");
 }
 
-QStringList LYTArchivePackage::listFonts() {
+QStringList LYTArchivePackage::listFonts() const {
 	return this->listSubDirIfExists("arc/font");
 }
 
 
 
-QByteArray LYTArchivePackage::getAnim(QString name) {
+QByteArray LYTArchivePackage::getAnim(QString name) const {
 	return this->getFileFromSubDirIfExists("arc/anim", name);
 }
 
-QByteArray LYTArchivePackage::getLayout(QString name) {
+QByteArray LYTArchivePackage::getLayout(QString name) const {
 	return this->getFileFromSubDirIfExists("arc/blyt", name);
 }
 
-QByteArray LYTArchivePackage::getTexture(QString name) {
+QByteArray LYTArchivePackage::getTexture(QString name) const {
 	return this->getFileFromSubDirIfExists("arc/timg", name);
 }
 
-QByteArray LYTArchivePackage::getFont(QString name) {
+QByteArray LYTArchivePackage::getFont(QString name) const {
 	return this->getFileFromSubDirIfExists("arc/font", name);
 }
 
@@ -163,6 +163,6 @@ bool LYTArchivePackage::savePackage() {
 }
 
 
-QString LYTArchivePackage::description() {
+QString LYTArchivePackage::description() const {
 	return m_filename;
 }

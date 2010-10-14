@@ -25,10 +25,10 @@ class LYTTexCoordGen {
 public:
 	LYTTexCoordGen();
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	quint8 genType;
 	quint8 src;

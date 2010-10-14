@@ -21,7 +21,7 @@
 LYTAlphaCompare::LYTAlphaCompare() {
 }
 
-void LYTAlphaCompare::dumpToDebug() {
+void LYTAlphaCompare::dumpToDebug() const {
 	qDebug() << "LYTAlphaCompare @" << (void*)this;
 	qDebug() << "Comp0:" << comp0 << "- Ref0:" << ref0;
 	qDebug() << "Comp1:" << comp1 << "- Ref1:" << ref1;
@@ -29,7 +29,7 @@ void LYTAlphaCompare::dumpToDebug() {
 }
 
 
-void LYTAlphaCompare::writeToDataStream(QDataStream &out) {
+void LYTAlphaCompare::writeToDataStream(QDataStream &out) const {
 	out << (quint8)(comp0 | (comp1 << 4));
 	out << (quint8)op;
 	out << (quint8)ref0;

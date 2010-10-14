@@ -29,11 +29,13 @@ public:
 	LYTBounding(LYTLayout &layout);
 
 
-	void writeToDataStream(QDataStream &out);
+	Magic magic() const;
+
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug(bool showHeading=true);
+	void dumpToDebug(bool showHeading=true) const;
 };
 
 
-#endif // LYTPICTURE_H
+#endif // LYTBOUNDING_H

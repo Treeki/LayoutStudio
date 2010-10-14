@@ -27,7 +27,7 @@ LYTPane::~LYTPane() {
 		delete ptr;
 }
 
-LYTPane *LYTPane::findPaneByName(QString name, bool recursive) {
+LYTPane *LYTPane::findPaneByName(QString name, bool recursive) const {
 	foreach (LYTPane *pane, this->children) {
 		if (pane->name == name)
 			return pane;
@@ -47,7 +47,11 @@ LYTLayout &LYTPane::layout() const {
 }
 
 
-void LYTPane::dumpToDebug(bool showHeading) {
+Magic LYTPane::magic() const {
+	return Magic('pan1');
+}
+
+void LYTPane::dumpToDebug(bool showHeading) const {
 	if (showHeading)
 		qDebug() << "LYTPane" << name << "@" << (void*)this;
 
@@ -61,11 +65,11 @@ void LYTPane::dumpToDebug(bool showHeading) {
 
 
 
-void LYTPane::writeToDataStream(QDataStream &out) {
+void LYTPane::writeToDataStream(QDataStream &out) const {
 	out << (quint8)flags;
 	out << (quint8)origin;
 	out << (quint8)alpha;
-	out.skipRawData(1); // padding
+	WritePadding(1, out);
 
 	WriteFixedLengthASCII(out, name, 0x10);
 	WriteFixedLengthASCII(out, userdata, 8);
@@ -101,4 +105,13 @@ void LYTPane::readFromDataStream(QDataStream &in) {
 	in >> (float&)yScale;
 	in >> (float&)width;
 	in >> (float&)height;
+}
+
+
+void LYTPane::addFontRefsToList(QStringList &list) const {
+	//qDebug() << "Getting font refs for" << this->name;
+
+	foreach (LYTPane *p, this->children) {
+		p->addFontRefsToList(list);
+	}
 }

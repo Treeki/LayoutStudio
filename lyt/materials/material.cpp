@@ -29,7 +29,7 @@ LYTLayout &LYTMaterial::layout() const {
 }
 
 
-void LYTMaterial::dumpToDebug() {
+void LYTMaterial::dumpToDebug() const {
 	qDebug() << "LYTMaterial" << name << "@" << (void*)this;
 
 	for (int i = 0; i < 3; i++)
@@ -90,8 +90,86 @@ void LYTMaterial::dumpToDebug() {
 
 
 
-void LYTMaterial::writeToDataStream(QDataStream &out) {
+void LYTMaterial::writeToDataStream(QDataStream &out) const {
 	WriteFixedLengthASCII(out, name, 0x14);
+
+	for (int i = 0; i < 3; i++)
+		WriteS10Color(this->colours[i], out);
+
+	for (int i = 0; i < 4; i++)
+		WriteRGBA8Color(this->tevKColour[i], out);
+
+
+	LYTMaterialResourceNum resourceNum;
+	resourceNum.setTexMapNum(texMaps.count());
+	resourceNum.setTexSRTNum(texSRTs.count());
+	resourceNum.setTexCoordGenNum(texCoordGens.count());
+	resourceNum.setHasChanCtrl(hasChanCtrl);
+	resourceNum.setHasMatCol(hasMatCol);
+	resourceNum.setHasTevSwapTable(hasTevSwapTable);
+	resourceNum.setIndTexSRTNum(indTexSRTs.count());
+	resourceNum.setIndTexStageNum(indTexStages.count());
+	resourceNum.setTevStageNum(tevStages.count());
+	resourceNum.setHasAlphaCompare(hasAlphaCompare);
+	resourceNum.setHasBlendMode(hasBlendMode);
+	out << (quint32)resourceNum.value();
+
+
+	// TexMap
+	for (int i = 0; i < texMaps.count(); i++) {
+		texMaps.at(i).writeToDataStream(out, this->m_layout);
+	}
+
+	// TexSRT
+	for (int i = 0; i < texSRTs.count(); i++) {
+		texSRTs.at(i).writeToDataStream(out);
+	}
+
+	// TexCoordGen
+	for (int i = 0; i < texCoordGens.count(); i++) {
+		texCoordGens.at(i).writeToDataStream(out);
+	}
+
+	// ChanCtrl
+	if (hasChanCtrl) {
+		chanCtrl.writeToDataStream(out);
+	}
+
+	// MatCol
+	if (hasMatCol) {
+		WriteRGBA8Color(this->matCol, out);
+	}
+
+	// TevSwapTable
+	if (hasTevSwapTable) {
+		tevSwapTable.writeToDataStream(out);
+	}
+
+	// IndTexSRT
+	for (int i = 0; i < indTexSRTs.count(); i++) {
+		indTexSRTs.at(i).writeToDataStream(out);
+	}
+
+	// IndTexStage
+	for (int i = 0; i < indTexStages.count(); i++) {
+		indTexStages.at(i).writeToDataStream(out);
+	}
+
+	// TevStage
+	for (int i = 0; i < tevStages.count(); i++) {
+		tevStages.at(i).writeToDataStream(out);
+	}
+
+	// AlphaCompare
+	if (hasAlphaCompare) {
+		alphaCompare.writeToDataStream(out);
+	}
+
+	// BlendMode
+	if (hasBlendMode) {
+		blendMode.writeToDataStream(out);
+	}
+
 }
 
 void LYTMaterial::readFromDataStream(QDataStream &in) {

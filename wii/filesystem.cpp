@@ -38,16 +38,16 @@ void WiiFSObject::unlinkFromParent() {
 	this->parent = 0;
 }
 
-bool WiiFSObject::nameIsEqual(QString check) {
+bool WiiFSObject::nameIsEqual(QString check) const {
 	return (bool)(QString::compare(this->name, check, Qt::CaseInsensitive) == 0);
 }
 
-bool WiiFSObject::isFile() { return false; }
-bool WiiFSObject::isDirectory() { return false; }
+bool WiiFSObject::isFile() const { return false; }
+bool WiiFSObject::isDirectory() const { return false; }
 
 /******************************************************************************/
 
-bool WiiFile::isFile() { return true; }
+bool WiiFile::isFile() const { return true; }
 
 /******************************************************************************/
 
@@ -56,9 +56,9 @@ WiiDirectory::~WiiDirectory() {
 		delete ptr;
 }
 
-bool WiiDirectory::isDirectory() { return true; }
+bool WiiDirectory::isDirectory() const { return true; }
 
-WiiFSObject *WiiDirectory::findByName(QString name, bool recursive) {
+WiiFSObject *WiiDirectory::findByName(QString name, bool recursive) const {
 	foreach (WiiFSObject *obj, children) {
 		if (obj->nameIsEqual(name))
 			return obj;
@@ -108,7 +108,7 @@ WiiFSObject *WiiDirectory::resolvePath(QString path) {
 
 		if (pathComponents.isEmpty()) {
 			// we've reached the end \o/
-			return nextObj;
+			return (WiiFSObject *)nextObj;
 		}
 
 		// verify that this object is a directory

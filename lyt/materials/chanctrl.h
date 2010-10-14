@@ -25,10 +25,10 @@ class LYTChanCtrl {
 public:
 	LYTChanCtrl();
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	quint8 colourMatSrc;
 	quint8 alphaMatSrc;

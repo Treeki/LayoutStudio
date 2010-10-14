@@ -32,10 +32,10 @@ public:
 	LYTWindowFrame(LYTWindow &window);
 
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	quint8 type; // 0-5; controls texture flipping; must investigate this more
 	QString materialName;
@@ -51,10 +51,12 @@ public:
 	~LYTWindow();
 
 
-	void writeToDataStream(QDataStream &out);
+	Magic magic() const;
+
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug(bool showHeading=true);
+	void dumpToDebug(bool showHeading=true) const;
 
 
 	float contentOverflowLeft;
@@ -70,7 +72,7 @@ public:
 
 
 protected:
-	void writeContentInfo(QDataStream &out);
+	void writeContentInfo(QDataStream &out) const;
 	void readContentInfo(QDataStream &in);
 
 	friend class LYTWindowFrame;

@@ -28,15 +28,15 @@ public:
 
 	~LYTArchivePackage();
 
-	QStringList listAnims();
-	QStringList listLayouts();
-	QStringList listTextures();
-	QStringList listFonts();
+	QStringList listAnims() const;
+	QStringList listLayouts() const;
+	QStringList listTextures() const;
+	QStringList listFonts() const;
 
-	QByteArray getAnim(QString name);
-	QByteArray getLayout(QString name);
-	QByteArray getTexture(QString name);
-	QByteArray getFont(QString name);
+	QByteArray getAnim(QString name) const;
+	QByteArray getLayout(QString name) const;
+	QByteArray getTexture(QString name) const;
+	QByteArray getFont(QString name) const;
 
 	bool writeAnim(QString name, QByteArray data);
 	bool writeLayout(QString name, QByteArray data);
@@ -44,15 +44,15 @@ public:
 	bool writeFont(QString name, QByteArray data);
 
 	bool savePackage();
-	QString description();
+	QString description() const;
 
-	WiiArchiveU8 *archive();
-	QString filename();
+	WiiArchiveU8 *archive() const;
+	QString filename() const;
 
 
 protected:
-	QStringList listSubDirIfExists(QString dirName);
-	QByteArray getFileFromSubDirIfExists(QString dirName, QString fileName);
+	QStringList listSubDirIfExists(QString dirName) const;
+	QByteArray getFileFromSubDirIfExists(QString dirName, QString fileName) const;
 	bool writeFileToSubDir(QString dirName, QString fileName, QByteArray data);
 
 	WiiArchiveU8 *m_archive;

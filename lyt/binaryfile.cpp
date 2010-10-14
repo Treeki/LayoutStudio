@@ -20,13 +20,11 @@
 
 #include <QtCore/QDataStream>
 
-LYTBinaryFile::LYTBinaryFile(Magic magic, Version version) {
-	this->magic.value = magic.value;
-	this->version.value = version.value;
+LYTBinaryFile::LYTBinaryFile(Magic m, Version v) : magic(m), version(v) {
 }
 
 
-LYTBinaryFile::LYTBinaryFile(QByteArray data) {
+LYTBinaryFile::LYTBinaryFile(QByteArray data) : magic(0), version(0) {
 	QDataStream reader(data);
 	InitDataStream(reader);
 
@@ -49,7 +47,7 @@ LYTBinaryFile::LYTBinaryFile(QByteArray data) {
 }
 
 
-QByteArray LYTBinaryFile::pack() {
+QByteArray LYTBinaryFile::pack() const {
 	// first off, calculate filesize for the header
 	quint32 fileSize = 16;
 

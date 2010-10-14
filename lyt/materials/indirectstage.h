@@ -25,10 +25,10 @@ class LYTIndirectStage {
 public:
 	LYTIndirectStage();
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	quint8 texCoord;
 	quint8 texMap;

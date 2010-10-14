@@ -24,15 +24,20 @@
 
 class LYTBinaryFileSection {
 public:
-    LYTBinaryFileSection();
+	LYTBinaryFileSection();
+	LYTBinaryFileSection(Magic magic);
+	LYTBinaryFileSection(Magic magic, QByteArray data);
 
 	Magic magic;
 	QByteArray data;
 
-	void writeToDataStream(QDataStream &out);
+	QDataStream *createReadStream() const;
+	QDataStream *createWriteStream();
+
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	int writtenSize();
+	int writtenSize() const;
 };
 
 

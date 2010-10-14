@@ -40,13 +40,16 @@ void LYTLayout::clear() {
 	this->m_fontRefs.clear();
 	this->m_textureRefs.clear();
 
-	foreach (LYTMaterial *material, materials.values())
-		delete material;
+	foreach (LYTMaterialContainerEntry materialEntry, materials.list)
+		delete materialEntry.second;
 
 	this->materials.clear();
 
 	if (this->rootPane != 0)
 		delete this->rootPane;
+
+	foreach (LYTGroup *group, groups)
+		delete group;
 }
 
 
@@ -158,7 +161,8 @@ void LYTLayout::readLyt1(LYTBinaryFileSection &section) {
 	QDataStream in(section.data);
 	InitDataStream(in);
 
-	in.skipRawData(4); // unused in newer nw4r::lyt versions - TODO: add support
+	in >> (quint8&)flags; // seems to be unused in newer nw4r::lyt versions (but still in file)?
+	in.skipRawData(3); // padding
 	in >> (float&)width;
 	in >> (float&)height;
 
@@ -213,7 +217,7 @@ void LYTLayout::readMat1(LYTBinaryFileSection &section) {
 		material->readFromDataStream(in);
 		material->dumpToDebug();
 
-		materials.insert(material->name, material);
+		materials.addMaterial(material->name, material);
 	}
 }
 
@@ -237,4 +241,175 @@ LYTPane *LYTLayout::createPaneObj(LYTBinaryFileSection &section) {
 	pane->readFromDataStream(in);
 
 	return pane;
+}
+
+
+
+QByteArray LYTLayout::pack() {
+	qDebug() << "Writing layout";
+
+	// before we start writing the file, find out a bunch of info
+	qDebug() << "Compiling texture ref list";
+	m_textureRefs = this->generateTextureRefs();
+
+	qDebug() << "Compiling font ref list";
+	m_fontRefs = this->generateFontRefs();
+
+	// now start writing the file
+	Magic magic('RLYT');
+	Version version(0x000A);
+
+	LYTBinaryFile file(magic, version);
+
+	QDataStream *stream;
+
+	// write lyt1
+	file.sections.append(LYTBinaryFileSection(Magic('lyt1')));
+	stream = file.sections.last().createWriteStream();
+	(*stream) << (quint8)flags;
+	WritePadding(3, *stream);
+	(*stream) << (float)this->width;
+	(*stream) << (float)this->height;
+	delete stream;
+
+	// write txl1
+	file.sections.append(LYTBinaryFileSection(Magic('txl1')));
+	stream = file.sections.last().createWriteStream();
+	WriteStringList(*stream, this->m_textureRefs);
+	delete stream;
+
+	// write fnl1
+	file.sections.append(LYTBinaryFileSection(Magic('fnl1')));
+	stream = file.sections.last().createWriteStream();
+	WriteStringList(*stream, this->m_fontRefs);
+	delete stream;
+
+	// write mat1
+	file.sections.append(LYTBinaryFileSection(Magic('mat1')));
+	this->writeMat1(file.sections.last());
+
+	// next up: write the pane tree
+	this->writePane(file, this->rootPane);
+
+	// now write groups
+	this->writeGroups(file);
+
+	// and we're done!
+	return file.pack();
+}
+
+
+
+QStringList LYTLayout::generateTextureRefs() const {
+	QStringList out;
+
+	foreach (LYTMaterialContainerEntry matEntry, materials.list) {
+		foreach (LYTTexMap texMap, matEntry.second->texMaps) {
+			if (!out.contains(texMap.textureName))
+				out.append(texMap.textureName);
+		}
+	}
+
+	out.sort();
+
+	return out;
+}
+
+
+QStringList LYTLayout::generateFontRefs() const {
+	QStringList out;
+
+	this->rootPane->addFontRefsToList(out);
+
+	out.sort();
+
+	return out;
+}
+
+
+
+void LYTLayout::writeMat1(LYTBinaryFileSection &section) const {
+	QDataStream *stream = section.createWriteStream();
+
+	(*stream) << (quint16)this->materials.count();
+	WritePadding(2, *stream);
+
+	// now, assign space for the mat1 offsets, we'll set them later
+	qint64 matOffsetPos = stream->device()->pos();
+
+	WritePadding(4 * this->materials.count(), *stream);
+	QVector<quint32> materialOffsets(this->materials.count());
+
+	// write them
+	for (int i = 0; i < this->materials.count(); i++) {
+		// add 8 to the offset to account for nw4r::ut::BinaryBlockHeader
+		materialOffsets[i] = stream->device()->pos() + 8;
+		this->materials.getMaterialByIndex(i)->writeToDataStream(*stream);
+
+		// pad it if needed
+		qint64 checkPadding = stream->device()->pos();
+		int padding = AlignUp(checkPadding, 4) - checkPadding;
+		WritePadding(padding, *stream);
+	}
+
+	// and now write the offsets
+	qint64 endMatPos = stream->device()->pos();
+	stream->device()->seek(matOffsetPos);
+
+	for (int i = 0; i < materialOffsets.count(); i++) {
+		(*stream) << (quint32)materialOffsets[i];
+	}
+
+	stream->device()->seek(endMatPos);
+
+	delete stream;
+}
+
+
+void LYTLayout::writePane(LYTBinaryFile &file, LYTPane *pane) const {
+	file.sections.append(LYTBinaryFileSection(pane->magic()));
+
+	QDataStream *stream = file.sections.last().createWriteStream();
+	pane->writeToDataStream(*stream);
+	delete stream;
+
+
+	if (!pane->children.isEmpty()) {
+		file.sections.append(LYTBinaryFileSection(Magic('pas1')));
+
+		foreach (LYTPane *p, pane->children) {
+			this->writePane(file, p);
+		}
+
+		file.sections.append(LYTBinaryFileSection(Magic('pae1')));
+	}
+}
+
+
+void LYTLayout::writeGroups(LYTBinaryFile &file) const {
+	QDataStream *stream;
+
+	// first, write a dummy group for the root
+	file.sections.append(LYTBinaryFileSection(Magic('grp1')));
+	stream = file.sections.last().createWriteStream();
+
+	WriteFixedLengthASCII(*stream, "RootGroup", 0x10);
+	WritePadding(4, *stream);
+
+	delete stream;
+
+	// now write the children
+	if (!this->groups.isEmpty()) {
+		file.sections.append(LYTBinaryFileSection(Magic('grs1')));
+
+		foreach (LYTGroup *p, this->groups) {
+			file.sections.append(LYTBinaryFileSection(Magic('grp1')));
+
+			stream = file.sections.last().createWriteStream();
+			p->writeToDataStream(*stream);
+			delete stream;
+		}
+
+		file.sections.append(LYTBinaryFileSection('gre1'));
+	}
 }

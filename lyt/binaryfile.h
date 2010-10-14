@@ -28,7 +28,7 @@ public:
 	LYTBinaryFile(Magic magic, Version version);
 	LYTBinaryFile(QByteArray data);
 
-	QByteArray pack();
+	QByteArray pack() const;
 
 	Magic magic;
 	Version version;

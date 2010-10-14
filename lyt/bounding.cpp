@@ -24,7 +24,12 @@ LYTBounding::LYTBounding(LYTLayout &layout) : LYTPane(layout) {
 }
 
 
-void LYTBounding::dumpToDebug(bool showHeading) {
+Magic LYTBounding::magic() const {
+	return Magic('bnd1');
+}
+
+
+void LYTBounding::dumpToDebug(bool showHeading) const {
 	if (showHeading)
 		qDebug() << "LYTBounding" << name << "@" << (void*)this;
 
@@ -33,7 +38,7 @@ void LYTBounding::dumpToDebug(bool showHeading) {
 
 
 
-void LYTBounding::writeToDataStream(QDataStream &out) {
+void LYTBounding::writeToDataStream(QDataStream &out) const {
 	LYTPane::writeToDataStream(out);
 }
 

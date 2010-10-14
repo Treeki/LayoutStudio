@@ -20,6 +20,6 @@ quint32 WiiStringTableBuilder::add(QString str) {
 	return added;
 }
 
-QByteArray WiiStringTableBuilder::pack() {
+QByteArray WiiStringTableBuilder::pack() const {
 	return m_data;
 }

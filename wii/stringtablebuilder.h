@@ -11,7 +11,7 @@ public:
     WiiStringTableBuilder();
 
 	quint32 add(QString str);
-	QByteArray pack();
+	QByteArray pack() const;
 
 protected:
 	int m_nextOffset;

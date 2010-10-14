@@ -17,7 +17,7 @@
 
 #include "common.h"
 
-QByteArray PadByteArray(QByteArray original, int newLength, char padWith) {
+QByteArray PadByteArray(const QByteArray original, int newLength, char padWith) {
 	QByteArray newArray = original;
 
 	if (original.length() > newLength) {
@@ -91,6 +91,30 @@ QStringList ReadStringList(QDataStream &in) {
 	return output;
 }
 
+void WriteStringList(QDataStream &out, const QStringList list) {
+	out << (quint16)list.count();
+	WritePadding(2, out);
+
+	// calculate offsets for every string, and write them
+	// offset 0 points to the first entry in the offset list, etc, so
+	// take that into account for the string offset calculation
+	quint32 currentOffset = list.count() * 8;
+
+	foreach (QString str, list) {
+		out << (quint32)currentOffset;
+		WritePadding(4, out); // unused?
+
+		currentOffset += str.length() + 1;
+	}
+
+	// now write the strings
+	foreach (QString str, list) {
+		QByteArray rawStr = str.toAscii();
+		rawStr.append('\0');
+		out.writeRawData(rawStr.constData(), rawStr.length());
+	}
+}
+
 QString ReadFixedLengthASCII(QDataStream &in, int length) {
 	QByteArray readStr(length, '\0');
 	in.readRawData(readStr.data(), readStr.length());
@@ -102,7 +126,7 @@ QString ReadFixedLengthASCII(QDataStream &in, int length) {
 	return str;
 }
 
-void WriteFixedLengthASCII(QDataStream &out, QString str, int length) {
+void WriteFixedLengthASCII(QDataStream &out, const QString str, int length) {
 	QByteArray paddedStr = PadByteArray(str.toAscii(), length);
 	out.writeRawData(paddedStr.constData(), paddedStr.length());
 }

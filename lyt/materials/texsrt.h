@@ -25,10 +25,10 @@ class LYTTexSRT {
 public:
 	LYTTexSRT();
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	float xTrans;
 	float yTrans;

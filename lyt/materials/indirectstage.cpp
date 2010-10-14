@@ -21,14 +21,14 @@
 LYTIndirectStage::LYTIndirectStage() {
 }
 
-void LYTIndirectStage::dumpToDebug() {
+void LYTIndirectStage::dumpToDebug() const {
 	qDebug() << "LYTIndirectStage @" << (void*)this;
 	qDebug() << "texCoord:" << this->texCoord << "- texMap:" << this->texMap;
 	qDebug() << "wrap_s:" << this->wrap_s << "- wrap_t:" << this->wrap_t;
 }
 
 
-void LYTIndirectStage::writeToDataStream(QDataStream &out) {
+void LYTIndirectStage::writeToDataStream(QDataStream &out) const {
 	out << (quint8)texCoord;
 	out << (quint8)texMap;
 	out << (quint8)wrap_s;

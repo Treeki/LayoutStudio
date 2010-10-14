@@ -21,17 +21,17 @@
 LYTTexCoordGen::LYTTexCoordGen() {
 }
 
-void LYTTexCoordGen::dumpToDebug() {
+void LYTTexCoordGen::dumpToDebug() const {
 	qDebug() << "LYTTexCoordGen @" << (void*)this;
 	qDebug() << "GenType:" << genType << "- Mtx:" << mtx << "- Src:" << src;
 }
 
 
-void LYTTexCoordGen::writeToDataStream(QDataStream &out) {
+void LYTTexCoordGen::writeToDataStream(QDataStream &out) const {
 	out << (quint8)genType;
 	out << (quint8)src;
 	out << (quint8)mtx;
-	out.skipRawData(1); // padding
+	WritePadding(1, out);
 }
 
 

@@ -64,7 +64,7 @@ inline void ReadRGBA8Color(QColor &out, QDataStream &in) {
 	out = RGBAToColor(col);
 }
 
-inline void WriteRGBA8Color(QColor &in, QDataStream &out) {
+inline void WriteRGBA8Color(const QColor in, QDataStream &out) {
 	out << (quint32)ColorToRGBA(in);
 }
 
@@ -77,7 +77,7 @@ inline void ReadS10Color(QColor &out, QDataStream &in) {
 	out.setRgb(r, g, b, a);
 }
 
-inline void WriteS10Color(QColor &in, QDataStream &out) {
+inline void WriteS10Color(const QColor in, QDataStream &out) {
 	out << (quint16)in.red();
 	out << (quint16)in.green();
 	out << (quint16)in.blue();
@@ -103,6 +103,7 @@ inline void InitDataStream(QDataStream &stream) {
 }
 
 QStringList ReadStringList(QDataStream &in);
+void WriteStringList(QDataStream &out, QStringList list);
 
 QString ReadFixedLengthASCII(QDataStream &in, int length);
 void WriteFixedLengthASCII(QDataStream &out, QString str, int length);

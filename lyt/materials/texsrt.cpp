@@ -21,7 +21,7 @@
 LYTTexSRT::LYTTexSRT() {
 }
 
-void LYTTexSRT::dumpToDebug() {
+void LYTTexSRT::dumpToDebug() const {
 	qDebug() << "LYTTexSRT @" << (void*)this;
 	qDebug() << "Scale:" << xScale << "," << yScale;
 	qDebug() << "Rotation:" << rotate;
@@ -29,7 +29,7 @@ void LYTTexSRT::dumpToDebug() {
 }
 
 
-void LYTTexSRT::writeToDataStream(QDataStream &out) {
+void LYTTexSRT::writeToDataStream(QDataStream &out) const {
 	out << (float)xTrans;
 	out << (float)yTrans;
 	out << (float)rotate;

@@ -24,7 +24,12 @@ LYTTextBox::LYTTextBox(LYTLayout &layout) : LYTPane(layout) {
 }
 
 
-void LYTTextBox::dumpToDebug(bool showHeading) {
+Magic LYTTextBox::magic() const {
+	return Magic('txt1');
+}
+
+
+void LYTTextBox::dumpToDebug(bool showHeading) const {
 	if (showHeading)
 		qDebug() << "LYTTextBox" << name << "@" << (void*)this;
 
@@ -41,7 +46,7 @@ void LYTTextBox::dumpToDebug(bool showHeading) {
 
 
 
-void LYTTextBox::writeToDataStream(QDataStream &out) {
+void LYTTextBox::writeToDataStream(QDataStream &out) const {
 	LYTPane::writeToDataStream(out);
 
 	// lengths are stored in bytes (including zero terminator) not characters
@@ -49,7 +54,7 @@ void LYTTextBox::writeToDataStream(QDataStream &out) {
 	out << (quint16)((text.length() + 1) * 2);
 
 	// calculate the material and font numbers
-	int materialNum = m_layout.materials.keys().indexOf(materialName);
+	int materialNum = m_layout.materials.getIndexOfName(materialName);
 	int fontNum = m_layout.m_fontRefs.indexOf(fontName);
 
 	out << (quint16)materialNum;
@@ -58,7 +63,7 @@ void LYTTextBox::writeToDataStream(QDataStream &out) {
 	out << (quint8)alignment;
 	out << (quint8)alignmentOverride;
 
-	out.skipRawData(2); // padding
+	WritePadding(2, out);
 
 	out << (quint32)0x74; // fixed offset to textbox contents
 
@@ -74,6 +79,8 @@ void LYTTextBox::writeToDataStream(QDataStream &out) {
 	const ushort *convertedText = text.utf16();
 	for (int i = 0; i < text.length(); i++)
 		out << (quint16)convertedText[i];
+
+	out << (quint16)0; // zeroterm
 }
 
 
@@ -99,7 +106,7 @@ void LYTTextBox::readFromDataStream(QDataStream &in) {
 	in >> (quint16&)materialNum;
 	in >> (quint16&)fontNum;
 
-	materialName = m_layout.materials.keys().at(materialNum);
+	materialName = m_layout.materials.getNameOfIndex(materialNum);
 	fontName = m_layout.m_fontRefs.at(fontNum);
 
 	in >> (quint8&)alignment;
@@ -129,4 +136,13 @@ void LYTTextBox::readFromDataStream(QDataStream &in) {
 
 	text.setUtf16(rawText, stringLength);
 	delete[] rawText;
+}
+
+
+void LYTTextBox::addFontRefsToList(QStringList &list) const {
+	LYTPane::addFontRefsToList(list);
+
+	if (!list.contains(this->fontName)) {
+		list.append(this->fontName);
+	}
 }

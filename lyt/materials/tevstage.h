@@ -25,10 +25,10 @@ class LYTTevStage {
 public:
 	LYTTevStage();
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	// TEV order:
 	int texCoord;

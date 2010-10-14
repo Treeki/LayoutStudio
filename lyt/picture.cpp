@@ -24,7 +24,12 @@ LYTPicture::LYTPicture(LYTLayout &layout) : LYTPane(layout) {
 }
 
 
-void LYTPicture::dumpToDebug(bool showHeading) {
+Magic LYTPicture::magic() const {
+	return Magic('pic1');
+}
+
+
+void LYTPicture::dumpToDebug(bool showHeading) const {
 	if (showHeading)
 		qDebug() << "LYTPicture" << name << "@" << (void*)this;
 
@@ -43,19 +48,19 @@ void LYTPicture::dumpToDebug(bool showHeading) {
 
 
 
-void LYTPicture::writeToDataStream(QDataStream &out) {
+void LYTPicture::writeToDataStream(QDataStream &out) const {
 	LYTPane::writeToDataStream(out);
 
 	for (int i = 0; i < 4; i++)
 		WriteRGBA8Color(vtxColours[i], out);
 
 	// calculate the material number
-	int materialNum = m_layout.materials.keys().indexOf(materialName);
+	int materialNum = m_layout.materials.getIndexOfName(materialName);
 	out << (quint16)materialNum;
 
 	// write texcoords
 	out << (quint8)texCoords.count();
-	out.skipRawData(1); // padding
+	WritePadding(1, out);
 
 	foreach (LYTTexCoords texCoord, texCoords) {
 		for (int i = 0; i < 4; i++)
@@ -74,7 +79,7 @@ void LYTPicture::readFromDataStream(QDataStream &in) {
 	quint16 materialNum;
 	in >> (quint16&)materialNum;
 
-	materialName = m_layout.materials.keys().at(materialNum);
+	materialName = m_layout.materials.getNameOfIndex(materialNum);
 
 	// read texcoords
 	quint8 texCoordNum;
@@ -83,8 +88,8 @@ void LYTPicture::readFromDataStream(QDataStream &in) {
 
 	texCoords.resize(texCoordNum);
 
-	foreach (LYTTexCoords texCoord, texCoords) {
-		for (int i = 0; i < 4; i++)
-			ReadPointF(in, texCoord.coord[i]);
+	for (int i = 0; i < texCoordNum; i++) {
+		for (int j = 0; j < 4; j++)
+			ReadPointF(in, texCoords[i].coord[j]);
 	}
 }

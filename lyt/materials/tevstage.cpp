@@ -21,7 +21,7 @@
 LYTTevStage::LYTTevStage() {
 }
 
-void LYTTevStage::dumpToDebug() {
+void LYTTevStage::dumpToDebug() const {
 	qDebug() << "LYTTevStage @" << (void*)this;
 	qDebug() << "TEV order: texCoord" << texCoord << ", colour" << colour << ", texMap" << texMap;
 	qDebug() << "SwapMode: ras" << rasSwapMode << ", tex" << texSwapMode;
@@ -43,13 +43,13 @@ void LYTTevStage::dumpToDebug() {
 }
 
 
-void LYTTevStage::writeToDataStream(QDataStream &out) {
+void LYTTevStage::writeToDataStream(QDataStream &out) const {
 	char data[0x10];
 	qMemSet(data, 0, 0x10);
 
 	// TEV order:
 	data[0] = texCoord;
-	colour = data[1];
+	data[1] = colour;
 	data[2] = texMap & 0xFF;
 	data[3] = BitInsert(data[3], texMap >> 8, 1, 32 - 1);
 

@@ -45,17 +45,17 @@ public:
 
 	WiiDirectory root;
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 
 private:
 	void readDir(QDataStream &in, WiiDirectory &dir, int lastChild, U8ReadInfo &info);
 
-	void addNodeToStringTable(WiiFSObject &node, WiiStringTableBuilder &table);
-	void countNode(WiiFSObject &node, int *countPtr);
+	void addNodeToStringTable(const WiiFSObject &node, WiiStringTableBuilder &table) const;
+	void countNode(const WiiFSObject &node, int *countPtr) const;
 
-	void writeDir(QDataStream &out, WiiDirectory &dir, U8WriteInfo &info);
+	void writeDir(QDataStream &out, const WiiDirectory &dir, U8WriteInfo &info) const;
 
-	void writeNodeData(QDataStream &out, WiiFSObject &node);
+	void writeNodeData(QDataStream &out, const WiiFSObject &node) const;
 };
 
 #endif // WIIARCHIVEU8_H

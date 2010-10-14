@@ -21,14 +21,14 @@
 LYTBlendMode::LYTBlendMode() {
 }
 
-void LYTBlendMode::dumpToDebug() {
+void LYTBlendMode::dumpToDebug() const {
 	qDebug() << "LYTBlendMode @" << (void*)this;
 	qDebug() << "srcFactor:" << srcFactor << "- destFactor:" << destFactor;
 	qDebug() << "op:" << op << "- type:" << type;
 }
 
 
-void LYTBlendMode::writeToDataStream(QDataStream &out) {
+void LYTBlendMode::writeToDataStream(QDataStream &out) const {
 	out << (quint8)type;
 	out << (quint8)srcFactor;
 	out << (quint8)destFactor;

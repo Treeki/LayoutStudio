@@ -32,10 +32,10 @@ public:
 
 
 	void unlinkFromParent();
-	bool nameIsEqual(QString check);
+	bool nameIsEqual(QString check) const;
 
-	virtual bool isFile();
-	virtual bool isDirectory();
+	virtual bool isFile() const;
+	virtual bool isDirectory() const;
 
 
 protected:
@@ -50,7 +50,7 @@ public:
 	QByteArray data;
 
 
-	bool isFile();
+	bool isFile() const;
 };
 
 /******************************************************************************/
@@ -62,9 +62,9 @@ public:
 	QList<WiiFSObject *> children;
 
 
-	bool isDirectory();
+	bool isDirectory() const;
 
-	WiiFSObject *findByName(QString name, bool recursive);
+	WiiFSObject *findByName(QString name, bool recursive) const;
 	WiiFSObject *resolvePath(QString path);
 	bool addChild(WiiFSObject *obj);
 };

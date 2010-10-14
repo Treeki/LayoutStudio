@@ -21,18 +21,18 @@
 LYTTevSwapTable::LYTTevSwapTable() {
 }
 
-void LYTTevSwapTable::dumpToDebug() {
+void LYTTevSwapTable::dumpToDebug() const {
 	qDebug() << "LYTTevSwapTable @" << (void*)this;
 
 	for (int i = 0; i < 4; i++) {
-		LYTTevSwapMode *m = &mode[i];
+		const LYTTevSwapMode *m = &mode[i];
 		qDebug() << i << ":" << m->red << "," << m->green << "," << m->blue << "," << m->alpha;
 	}
 }
 
 
 
-void LYTTevSwapTable::writeToDataStream(QDataStream &out) {
+void LYTTevSwapTable::writeToDataStream(QDataStream &out) const {
 	for (int i = 0; i < 4; i++) {
 		quint8 val = 0;
 		val |= mode[i].red;

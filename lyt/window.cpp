@@ -23,13 +23,13 @@
 LYTWindowFrame::LYTWindowFrame(LYTWindow &window) : m_window(window) {
 }
 
-void LYTWindowFrame::writeToDataStream(QDataStream &out) {
+void LYTWindowFrame::writeToDataStream(QDataStream &out) const {
 	// calculate the material number
-	int materialNum = m_window.m_layout.materials.keys().indexOf(materialName);
+	int materialNum = m_window.m_layout.materials.getIndexOfName(materialName);
 	out << (quint16)materialNum;
 
 	out << (quint8)type;
-	out.skipRawData(1); // padding
+	WritePadding(1, out);
 }
 
 void LYTWindowFrame::readFromDataStream(QDataStream &in) {
@@ -37,13 +37,13 @@ void LYTWindowFrame::readFromDataStream(QDataStream &in) {
 	quint16 materialNum;
 	in >> (quint16&)materialNum;
 
-	materialName = m_window.m_layout.materials.keys().at(materialNum);
+	materialName = m_window.m_layout.materials.getNameOfIndex(materialNum);
 
 	in >> (quint8&)type;
 	in.skipRawData(1); // padding
 }
 
-void LYTWindowFrame::dumpToDebug() {
+void LYTWindowFrame::dumpToDebug() const {
 	qDebug() << "LYTWindowFrame @" << (void*)this << "- type:" << type << "- material:" << materialName;
 }
 
@@ -59,9 +59,12 @@ LYTWindow::~LYTWindow() {
 
 
 
-// all of this needs to be done
+Magic LYTWindow::magic() const {
+	return Magic('wnd1');
+}
 
-void LYTWindow::dumpToDebug(bool showHeading) {
+
+void LYTWindow::dumpToDebug(bool showHeading) const {
 	if (showHeading)
 		qDebug() << "LYTWindow" << name << "@" << (void*)this;
 
@@ -88,7 +91,7 @@ void LYTWindow::dumpToDebug(bool showHeading) {
 
 
 
-void LYTWindow::writeToDataStream(QDataStream &out) {
+void LYTWindow::writeToDataStream(QDataStream &out) const {
 	LYTPane::writeToDataStream(out);
 
 	out << (float)contentOverflowLeft;
@@ -97,7 +100,7 @@ void LYTWindow::writeToDataStream(QDataStream &out) {
 	out << (float)contentOverflowBottom;
 
 	out << (quint8)frames.count();
-	out.skipRawData(3); // padding
+	WritePadding(3, out);
 
 	out << (quint32)0x68; // offset to content struct
 	out << (quint32)(0x7C + (contentTexCoords.count()*0x20)); // offset to frame offset list
@@ -106,12 +109,12 @@ void LYTWindow::writeToDataStream(QDataStream &out) {
 		WriteRGBA8Color(contentVtxColours[i], out);
 
 	// calculate the material number
-	int materialNum = m_layout.materials.keys().indexOf(contentMaterialName);
+	int materialNum = m_layout.materials.getIndexOfName(contentMaterialName);
 	out << (quint16)materialNum;
 
 	// write texcoords
 	out << (quint8)contentTexCoords.count();
-	out.skipRawData(1); // padding
+	WritePadding(1, out);
 
 	foreach (LYTTexCoords texCoord, contentTexCoords) {
 		for (int i = 0; i < 4; i++)
@@ -165,7 +168,7 @@ void LYTWindow::readFromDataStream(QDataStream &in) {
 	quint16 materialNum;
 	in >> (quint16&)materialNum;
 
-	contentMaterialName = m_layout.materials.keys().at(materialNum);
+	contentMaterialName = m_layout.materials.getNameOfIndex(materialNum);
 
 	// read texcoords
 	quint8 texCoordNum;
@@ -174,9 +177,9 @@ void LYTWindow::readFromDataStream(QDataStream &in) {
 
 	contentTexCoords.resize(texCoordNum);
 
-	foreach (LYTTexCoords texCoord, contentTexCoords) {
-		for (int i = 0; i < 4; i++)
-			ReadPointF(in, texCoord.coord[i]);
+	for (int i = 0; i < texCoordNum; i++) {
+		for (int j = 0; j < 4; j++)
+			ReadPointF(in, contentTexCoords[i].coord[j]);
 	}
 
 	// read frame offset list

@@ -17,14 +17,23 @@
 
 #include "binaryfilesection.h"
 
-LYTBinaryFileSection::LYTBinaryFileSection() {
+LYTBinaryFileSection::LYTBinaryFileSection() : magic(0) {
+}
+
+LYTBinaryFileSection::LYTBinaryFileSection(Magic m) : magic(m) {
+}
+
+LYTBinaryFileSection::LYTBinaryFileSection(Magic m, QByteArray d) : magic(m), data(d) {
 }
 
 
-void LYTBinaryFileSection::writeToDataStream(QDataStream &out) {
+void LYTBinaryFileSection::writeToDataStream(QDataStream &out) const {
 	out << (quint32)magic.value;
-	out << (quint32)data.length() + 8;
+	out << (quint32)AlignUp(data.length() + 8, 4);
 	out.writeRawData(data.constData(), data.length());
+
+	int align = AlignUp(data.length(), 4) - data.length();
+	WritePadding(align, out);
 }
 
 void LYTBinaryFileSection::readFromDataStream(QDataStream &in) {
@@ -40,6 +49,20 @@ void LYTBinaryFileSection::readFromDataStream(QDataStream &in) {
 }
 
 
-int LYTBinaryFileSection::writtenSize() {
-	return 8 + this->data.length();
+int LYTBinaryFileSection::writtenSize() const {
+	return 8 + AlignUp(this->data.length(), 4);
+}
+
+
+QDataStream *LYTBinaryFileSection::createReadStream() const {
+	QDataStream *stream = new QDataStream(this->data);
+	InitDataStream(*stream);
+	return stream;
+}
+
+
+QDataStream *LYTBinaryFileSection::createWriteStream() {
+	QDataStream *stream = new QDataStream(&this->data, QIODevice::ReadWrite);
+	InitDataStream(*stream);
+	return stream;
 }

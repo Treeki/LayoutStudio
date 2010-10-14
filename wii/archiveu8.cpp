@@ -124,7 +124,7 @@ void WiiArchiveU8::readDir(QDataStream &in, WiiDirectory &dir, int lastChild, U8
 
 
 
-void WiiArchiveU8::writeToDataStream(QDataStream &out) {
+void WiiArchiveU8::writeToDataStream(QDataStream &out) const {
 	U8WriteInfo info;
 
 	// first off, before we do anything else, create the string table
@@ -179,7 +179,7 @@ void WiiArchiveU8::writeToDataStream(QDataStream &out) {
 }
 
 
-void WiiArchiveU8::addNodeToStringTable(WiiFSObject &node, WiiStringTableBuilder &table) {
+void WiiArchiveU8::addNodeToStringTable(const WiiFSObject &node, WiiStringTableBuilder &table) const {
 	table.add(node.name);
 
 	if (node.isDirectory()) {
@@ -191,7 +191,7 @@ void WiiArchiveU8::addNodeToStringTable(WiiFSObject &node, WiiStringTableBuilder
 }
 
 
-void WiiArchiveU8::countNode(WiiFSObject &node, int *countPtr) {
+void WiiArchiveU8::countNode(const WiiFSObject &node, int *countPtr) const {
 	(*countPtr)++;
 
 	if (node.isDirectory()) {
@@ -203,7 +203,7 @@ void WiiArchiveU8::countNode(WiiFSObject &node, int *countPtr) {
 }
 
 
-void WiiArchiveU8::writeDir(QDataStream &out, WiiDirectory &dir, U8WriteInfo &info) {
+void WiiArchiveU8::writeDir(QDataStream &out, const WiiDirectory &dir, U8WriteInfo &info) const {
 	foreach (WiiFSObject *p, dir.children) {
 		info.currentNode++;
 
@@ -244,7 +244,7 @@ void WiiArchiveU8::writeDir(QDataStream &out, WiiDirectory &dir, U8WriteInfo &in
 }
 
 
-void WiiArchiveU8::writeNodeData(QDataStream &out, WiiFSObject &node) {
+void WiiArchiveU8::writeNodeData(QDataStream &out, const WiiFSObject &node) const {
 	if (node.isDirectory()) {
 		// write all the children's data
 		WiiDirectory *thisDir = (WiiDirectory*)&node;

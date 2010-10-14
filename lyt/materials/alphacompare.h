@@ -25,10 +25,10 @@ class LYTAlphaCompare {
 public:
 	LYTAlphaCompare();
 
-	void writeToDataStream(QDataStream &out);
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	quint8 comp0;
 	quint8 ref0;

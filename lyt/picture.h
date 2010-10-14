@@ -29,10 +29,12 @@ public:
 	LYTPicture(LYTLayout &layout);
 
 
-	void writeToDataStream(QDataStream &out);
+	Magic magic() const;
+
+	void writeToDataStream(QDataStream &out) const;
 	void readFromDataStream(QDataStream &in);
 
-	void dumpToDebug(bool showHeading=true);
+	void dumpToDebug(bool showHeading=true) const;
 
 	QColor vtxColours[4];
 	QString materialName;

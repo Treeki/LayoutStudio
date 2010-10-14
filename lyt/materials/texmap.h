@@ -27,10 +27,10 @@ class LYTTexMap {
 public:
 	LYTTexMap();
 
-	void writeToDataStream(QDataStream &out, LYTLayout &layout);
+	void writeToDataStream(QDataStream &out, LYTLayout &layout) const;
 	void readFromDataStream(QDataStream &in, LYTLayout &layout);
 
-	void dumpToDebug();
+	void dumpToDebug() const;
 
 	QString textureName;
 	int wrap_s;

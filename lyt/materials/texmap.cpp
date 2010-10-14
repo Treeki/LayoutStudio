@@ -21,14 +21,14 @@
 LYTTexMap::LYTTexMap() {
 }
 
-void LYTTexMap::dumpToDebug() {
+void LYTTexMap::dumpToDebug() const {
 	qDebug() << "LYTTexMap @" << (void*)this << ":" << textureName;
 	qDebug() << "- wrap_s:" << wrap_s << "- wrap_t:" << wrap_t;
 	qDebug() << "- mag_filter:" << mag_filter << "- min_filter:" << min_filter;
 }
 
 
-void LYTTexMap::writeToDataStream(QDataStream &out, LYTLayout &layout) {
+void LYTTexMap::writeToDataStream(QDataStream &out, LYTLayout &layout) const {
 	quint16 texNum = layout.m_textureRefs.indexOf(textureName);
 	out << (quint16)texNum;
 
