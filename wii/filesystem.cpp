@@ -39,7 +39,7 @@ void WiiFSObject::unlinkFromParent() {
 }
 
 bool WiiFSObject::nameIsEqual(QString check) {
-	return (bool)(QString::compare(this->name, check, Qt::CaseInsensitive));
+	return (bool)(QString::compare(this->name, check, Qt::CaseInsensitive) == 0);
 }
 
 bool WiiFSObject::isFile() { return false; }
@@ -82,7 +82,7 @@ WiiFSObject *WiiDirectory::resolvePath(QString path) {
 	// special case: handle absolute paths
 	if (pathComponents.at(0) == "") {
 		while (currentDir->parent != 0)
-			currentDir = currentDir->parent;
+			currentDir = (WiiDirectory*)currentDir->parent;
 
 		pathComponents.removeFirst();
 	}
@@ -90,14 +90,15 @@ WiiFSObject *WiiDirectory::resolvePath(QString path) {
 	// now we can loop through the path
 	while (!pathComponents.isEmpty()) {
 		QString next = pathComponents.takeFirst();
+		WiiFSObject *nextObj;
 
 		// get the next object in the path
 		if (next == ".") {
-			next = currentDir;
+			nextObj = currentDir;
 		} else if (next == "..") {
-			next = currentDir->parent;
+			nextObj = currentDir->parent;
 		} else {
-			WiiFSObject *nextObj = currentDir->findByName(next, false);
+			nextObj = currentDir->findByName(next, false);
 		}
 
 		if (nextObj == 0) {
@@ -113,6 +114,7 @@ WiiFSObject *WiiDirectory::resolvePath(QString path) {
 		// verify that this object is a directory
 		if (!nextObj->isDirectory()) {
 			qWarning() << "Failed to resolve path" << path << ": component" << next << "is not a directory";
+			return 0;
 		}
 
 		// ok, this has to be a directory, so let's just continue
@@ -120,6 +122,7 @@ WiiFSObject *WiiDirectory::resolvePath(QString path) {
 	}
 
 	// we should not reach here
+	qWarning() << "Failed to resolve path" << path << ": unknown error";
 	return 0;
 }
 

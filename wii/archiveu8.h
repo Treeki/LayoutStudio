@@ -20,8 +20,22 @@
 
 #include "common.h"
 #include "filesystem.h"
+#include "stringtablebuilder.h"
 
 
+struct U8ReadInfo {
+	qint64 startPos;
+	QString stringTable;
+	int currentNode;
+};
+
+struct U8WriteInfo {
+	qint64 startPos;
+	WiiStringTableBuilder stringTableBuilder;
+	int currentRecursionLevel;
+	int currentNode;
+	int nextDataOffset;
+};
 
 
 class WiiArchiveU8 {
@@ -32,6 +46,16 @@ public:
 	WiiDirectory root;
 
 	void writeToDataStream(QDataStream &out);
+
+private:
+	void readDir(QDataStream &in, WiiDirectory &dir, int lastChild, U8ReadInfo &info);
+
+	void addNodeToStringTable(WiiFSObject &node, WiiStringTableBuilder &table);
+	void countNode(WiiFSObject &node, int *countPtr);
+
+	void writeDir(QDataStream &out, WiiDirectory &dir, U8WriteInfo &info);
+
+	void writeNodeData(QDataStream &out, WiiFSObject &node);
 };
 
 #endif // WIIARCHIVEU8_H

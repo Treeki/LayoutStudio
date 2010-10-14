@@ -30,7 +30,9 @@ SOURCES += main.cpp \
     lyt/materials/blendmode.cpp \
     wii/common.cpp \
     wii/archiveu8.cpp \
-    wii/filesystem.cpp
+    wii/filesystem.cpp \
+    lyt/archivepackage.cpp \
+    wii/stringtablebuilder.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -57,7 +59,9 @@ HEADERS += lsmainwindow.h \
     lyt/materials/blendmode.h \
     wii/archiveu8.h \
     wii/common.h \
-    wii/filesystem.h
+    wii/filesystem.h \
+    lyt/archivepackage.h \
+    wii/stringtablebuilder.h
 FORMS += lsmainwindow.ui
 RESOURCES += resources.qrc
 

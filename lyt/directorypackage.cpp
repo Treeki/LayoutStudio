@@ -17,7 +17,7 @@
 
 #include "directorypackage.h"
 
-#include <QDir>
+#include <QtCore/QDir>
 
 LYTDirectoryPackage::LYTDirectoryPackage(QString path) : LYTPackageBase() {
 	QDir fix_path(path);

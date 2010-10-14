@@ -20,3 +20,6 @@
 LYTPackageBase::LYTPackageBase() {
 	// do nothing
 }
+
+LYTPackageBase::~LYTPackageBase() {
+}

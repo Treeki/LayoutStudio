@@ -20,7 +20,12 @@
 #include "lsglobals.h"
 
 #include "lyt/directorypackage.h"
+#include "lyt/archivepackage.h"
 #include "lyt/layout.h"
+
+#include <QtCore/QFile>
+
+#include "wii/archiveu8.h"
 
 
 int main(int argc, char *argv[]) {
@@ -28,10 +33,20 @@ int main(int argc, char *argv[]) {
 
 	LSGlobals::setup();
 
+	/*QFile file("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue.arc");
+	file.open(QFile::ReadOnly);
+	QByteArray arc = file.readAll();
+	file.close();*/
+
+	LYTArchivePackage package("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue.arc");
+	LYTLayout layout(package, "continue_05.brlyt");
+	package.savePackage();
+
+
 	//LYTDirectoryPackage package("H:\\ISOs\\NSMBWii\\Extracted\\Layout\\continue\\continue\\arc");
 	//LYTLayout layout(package, "continue_05.brlyt");
-	LYTDirectoryPackage package("H:\\ISOs\\TP\\banner\\arc_extr");
-	LYTLayout layout(package, "banner.brlyt");
+	//LYTDirectoryPackage package("H:\\ISOs\\TP\\banner\\arc_extr");
+	//LYTLayout layout(package, "banner.brlyt");
 
     LSMainWindow w;
     w.show();

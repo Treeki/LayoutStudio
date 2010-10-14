@@ -10,6 +10,15 @@
 #include <QtCore/QDebug>
 #include <QtCore/QVector>
 
+inline quint32 AlignUp(quint32 value, quint32 alignTo) {
+	return (value + alignTo - 1) & ~(alignTo - 1);
+}
+
+inline quint32 AlignDown(quint32 value, quint32 alignTo) {
+	return value & ~(alignTo - 1);
+}
+
+
 inline quint32 BitExtract(quint32 value, int count, int start) {
 	// this function relies on heavy compiler optimisation to be efficient :p
 	quint32 mask = 0;
@@ -31,6 +40,10 @@ inline quint32 BitInsert(quint32 value, int newValue, int count, int start) {
 	return value;
 }
 
+inline void WritePadding(int num, QDataStream &out) {
+	for (int i = 0; i < num; i++)
+		out << (quint8)0;
+}
 
 
 

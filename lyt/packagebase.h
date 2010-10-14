@@ -25,6 +25,7 @@
 class LYTPackageBase {
 public:
 	LYTPackageBase();
+	virtual ~LYTPackageBase();
 
 	virtual QStringList listAnims() = 0;
 	virtual QStringList listLayouts() = 0;

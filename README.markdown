@@ -16,6 +16,7 @@ GX GPU emulation in the [Dolphin][dol] GameCube/Wii emulator.
 ### Implemented Features ###
 - BRLYT reading (materials are not yet fully implemented)
 - Simple API for manipulating layout files from other code
+- Wii filesystem API (currently only supports U8 archives)
 
 
 ### Planned Features ###
@@ -31,7 +32,6 @@ GX GPU emulation in the [Dolphin][dol] GameCube/Wii emulator.
 - Test code for material structs
 - Add usd1 handling
 - Add LYTLayout packing
-- Add U8 archive support
 - Add TPL file support
 
 
