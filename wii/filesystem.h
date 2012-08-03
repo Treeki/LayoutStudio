@@ -67,6 +67,7 @@ public:
 	WiiFSObject *findByName(QString name, bool recursive) const;
 	WiiFSObject *resolvePath(QString path);
 	bool addChild(WiiFSObject *obj);
+	bool removeChild(WiiFSObject *obj);
 };
 
 

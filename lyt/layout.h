@@ -57,6 +57,7 @@ public:
 	LYTPane *rootPane;
 	QList<LYTGroup *> groups;
 
+	QStringList generateTextureRefs() const;
 
 
 protected:
@@ -77,7 +78,6 @@ protected:
 
 	LYTPane *createPaneObj(LYTBinaryFileSection &section);
 
-	QStringList generateTextureRefs() const;
 	QStringList generateFontRefs() const;
 
 	void writeMat1(LYTBinaryFileSection &section) const;

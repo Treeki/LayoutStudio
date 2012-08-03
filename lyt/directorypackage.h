@@ -15,40 +15,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
+// Currently unmaintained.
+// What this needs to be fixed up:
+// -- Implement rename()
+// -- Make it emit signals
+// -- Add support to the LayoutStudio UI
+
 #ifndef LYTDIRECTORYPACKAGE_H
 #define LYTDIRECTORYPACKAGE_H
 
 #include "packagebase.h"
 
 class LYTDirectoryPackage : public LYTPackageBase {
+	Q_OBJECT
 public:
-	LYTDirectoryPackage(QString path);
+	LYTDirectoryPackage(QString path, QObject *parent = 0);
 
-	QStringList listAnims() const;
-	QStringList listLayouts() const;
-	QStringList listTextures() const;
-	QStringList listFonts() const;
+	QStringList list(ItemType type) const;
+	QByteArray get(ItemType type, const QString &name) const;
+	bool write(ItemType type, const QString &name, const QByteArray &data);
+	bool remove(ItemType type, const QString &name);
 
-	QByteArray getAnim(QString name) const;
-	QByteArray getLayout(QString name) const;
-	QByteArray getTexture(QString name) const;
-	QByteArray getFont(QString name) const;
-
-	bool writeAnim(QString name, QByteArray data);
-	bool writeLayout(QString name, QByteArray data);
-	bool writeTexture(QString name, QByteArray data);
-	bool writeFont(QString name, QByteArray data);
-
+	bool needsExplicitSave() const { return false; }
 	bool savePackage();
 	QString description() const;
 	QString path() const;
 
 protected:
-	QStringList listSubDirIfExists(QString dirName) const;
-	QByteArray getFileFromSubDirIfExists(QString dirName, QString fileName) const;
-	bool writeFileToSubDir(QString dirName, QString fileName, QByteArray data);
-
-
 	QString m_path;
 };
 

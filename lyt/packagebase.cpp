@@ -17,9 +17,31 @@
 
 #include "packagebase.h"
 
-LYTPackageBase::LYTPackageBase() {
+LYTPackageBase::LYTPackageBase(QObject *parent) : QObject(parent) {
 	// do nothing
 }
 
 LYTPackageBase::~LYTPackageBase() {
+}
+
+
+
+QString LYTPackageBase::defaultPathForItemType(ItemType type, bool withArc) {
+	switch (type) {
+	case Layout:
+		return withArc ? "arc/blyt" : "blyt";
+	case Animation:
+		return withArc ? "arc/anim" : "anim";
+	case Texture:
+		return withArc ? "arc/timg" : "timg";
+	case Font:
+		return withArc ? "arc/font" : "font";
+	default:
+		return QString();
+	}
+}
+
+
+QByteArray LYTPackageBase::createSkeletonItem(ItemType type) {
+	return QByteArray();
 }

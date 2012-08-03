@@ -50,6 +50,7 @@ void LYTWindowFrame::dumpToDebug() const {
 
 
 LYTWindow::LYTWindow(LYTLayout &layout) : LYTPane(layout) {
+	m_type = WindowType;
 }
 
 LYTWindow::~LYTWindow() {

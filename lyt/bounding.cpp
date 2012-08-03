@@ -21,6 +21,7 @@
 
 
 LYTBounding::LYTBounding(LYTLayout &layout) : LYTPane(layout) {
+	m_type = BoundingType;
 }
 
 

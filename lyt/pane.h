@@ -35,6 +35,10 @@ public:
 
 	virtual Magic magic() const;
 
+	enum PaneTypes {
+		PaneType = 0, PictureType, TextBoxType, WindowType, BoundingType
+	};
+
 	virtual void writeToDataStream(QDataStream &out) const;
 	virtual void readFromDataStream(QDataStream &in);
 
@@ -50,7 +54,18 @@ public:
 	QList<LYTPane *> children;
 
 	quint8 flags;
-	quint8 origin;
+
+	enum OriginType {
+		Left = 0, Top = 0,
+		Center = 1,
+		Right = 2, Bottom = 2
+	};
+	OriginType horzOrigin;
+	OriginType vertOrigin;
+
+	float drawnVertexX() const;
+	float drawnVertexY() const;
+
 	quint8 alpha;
 
 	QString name;
@@ -70,8 +85,11 @@ public:
 	float width;
 	float height;
 
+	PaneTypes type() const { return m_type; }
+
 protected:
 	LYTLayout &m_layout;
+	PaneTypes m_type;
 };
 
 

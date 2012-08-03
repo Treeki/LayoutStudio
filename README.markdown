@@ -7,10 +7,18 @@ functional, real-time previews.
 
 The application is written in C++ (with heavy usage of Nokia's Qt toolkit).
 
-The graphical rendering will eventually use OpenGL, and build on the excellent
-GX GPU emulation in the [Dolphin][dol] GameCube/Wii emulator.
+I originally started this project in 2010, and wrote all the code required to
+read and write layout files, but then lost interest because I didn't know where
+to start with the rendering code.
 
-[dol]: http://code.google.com/p/dolphin-emu/
+In July 2012, I've taken it back up and changed my focus. Instead of trying to
+render layouts exactly the same way as they appear on the Wii, I'm going to
+forget about all the fancy TEV stuff and just create something that's usable for
+designing and editing layouts. I've been informed that this is actually how
+Nintendo's official tool works.
+
+Of course, I'd still love to add accurate rendering to this some day, but it's
+not going to be my #1 goal any more. Having a working editor is more important.
 
 
 ### Implemented Features ###
@@ -22,7 +30,7 @@ GX GPU emulation in the [Dolphin][dol] GameCube/Wii emulator.
 ### Planned Features ###
 - BRLAN reading/writing
 - Graphical interface for editing layouts and animations
-- Rendering of layouts using OpenGL and Dolphin's GX emulation
+- Rendering of layouts using OpenGL
 - BRFNT support
 
 

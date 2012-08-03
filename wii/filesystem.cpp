@@ -139,3 +139,12 @@ bool WiiDirectory::addChild(WiiFSObject *obj) {
 	return true;
 }
 
+bool WiiDirectory::removeChild(WiiFSObject *obj) {
+	if (obj->parent != this)
+		return false;
+
+	obj->unlinkFromParent();
+	delete obj;
+
+	return true;
+}

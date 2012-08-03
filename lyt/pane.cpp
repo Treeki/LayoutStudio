@@ -20,6 +20,7 @@
 
 LYTPane::LYTPane(LYTLayout &layout) : m_layout(layout) {
 	this->parent = 0;
+	m_type = PaneType;
 }
 
 LYTPane::~LYTPane() {
@@ -59,7 +60,7 @@ void LYTPane::dumpToDebug(bool showHeading) const {
 	qDebug() << "- Rotation:" << xRot << "," << yRot << "," << zRot;
 	qDebug() << "- Scale:" << xScale << "," << yScale;
 	qDebug() << "- Size:" << width << "x" << height;
-	qDebug() << "- Flags:" << flags << "- Origin:" << origin;
+	qDebug() << "- Flags:" << flags << "- Origin:" << horzOrigin << "," << vertOrigin;
 	qDebug() << "- Alpha:" << alpha << "- Userdata:" << userdata;
 }
 
@@ -67,7 +68,7 @@ void LYTPane::dumpToDebug(bool showHeading) const {
 
 void LYTPane::writeToDataStream(QDataStream &out) const {
 	out << (quint8)flags;
-	out << (quint8)origin;
+	out << (quint8)((int)horzOrigin + ((int)vertOrigin * 3));
 	out << (quint8)alpha;
 	WritePadding(1, out);
 
@@ -88,7 +89,10 @@ void LYTPane::writeToDataStream(QDataStream &out) const {
 
 void LYTPane::readFromDataStream(QDataStream &in) {
 	in >> (quint8&)flags;
-	in >> (quint8&)origin;
+	quint8 rawOrigin;
+	in >> rawOrigin;
+	horzOrigin = (OriginType)(rawOrigin % 3);
+	vertOrigin = (OriginType)(rawOrigin / 3);
 	in >> (quint8&)alpha;
 	in.skipRawData(1); // padding
 
@@ -113,5 +117,28 @@ void LYTPane::addFontRefsToList(QStringList &list) const {
 
 	foreach (LYTPane *p, this->children) {
 		p->addFontRefsToList(list);
+	}
+}
+
+
+float LYTPane::drawnVertexX() const {
+	switch (horzOrigin) {
+	case Center:
+		return -width / 2.0f;
+	case Right:
+		return -width;
+	default:
+		return 0.0f;
+	}
+}
+
+float LYTPane::drawnVertexY() const {
+	switch (vertOrigin) {
+	case Center:
+		return height / 2.0f;
+	case Bottom:
+		return height;
+	default:
+		return 0.0f;
 	}
 }

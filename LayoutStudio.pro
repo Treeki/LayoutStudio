@@ -32,7 +32,11 @@ SOURCES += main.cpp \
     wii/archiveu8.cpp \
     wii/filesystem.cpp \
     lyt/archivepackage.cpp \
-    wii/stringtablebuilder.cpp
+    wii/stringtablebuilder.cpp \
+	layoutgl/texturemanager.cpp \
+	layoutgl/widget.cpp \
+    wii/texpalette.cpp \
+    lspackagemodel.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -62,8 +66,13 @@ HEADERS += lsmainwindow.h \
     wii/filesystem.h \
     lyt/archivepackage.h \
     wii/stringtablebuilder.h \
-    lyt/materials/materialcontainer.h
-FORMS += lsmainwindow.ui
+    lyt/materials/materialcontainer.h \
+    layoutgl/texturemanager.h \
+    layoutgl/widget.h \
+    wii/texpalette.h \
+    wii/gx.h \
+    lspackagemodel.h
+FORMS +=
 RESOURCES += resources.qrc
 
 OTHER_FILES += \

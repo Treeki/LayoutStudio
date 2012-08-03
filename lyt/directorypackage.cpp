@@ -19,29 +19,30 @@
 
 #include <QtCore/QDir>
 
-LYTDirectoryPackage::LYTDirectoryPackage(QString path) : LYTPackageBase() {
+LYTDirectoryPackage::LYTDirectoryPackage(QString path, QObject *parent) : LYTPackageBase(parent) {
+	qWarning("LYTDirectoryPackage is currently unmaintained, you probably shouldn't use it");
+
 	QDir fix_path(path);
 	this->m_path = fix_path.absolutePath();
 }
 
 
 
-QStringList LYTDirectoryPackage::listSubDirIfExists(QString dirName) const {
+QStringList LYTDirectoryPackage::list(ItemType type) const {
 	QDir search(m_path);
 
-	if (search.cd(dirName)) {
+	if (search.cd(defaultPathForItemType(type))) {
 		return search.entryList();
 	}
 
 	return QStringList();
 }
 
-
-QByteArray LYTDirectoryPackage::getFileFromSubDirIfExists(QString dirName, QString fileName) const {
+QByteArray LYTDirectoryPackage::get(ItemType type, const QString &name) const {
 	QDir search(m_path);
 
-	if (search.cd(dirName)) {
-		QFile file(search.absoluteFilePath(fileName));
+	if (search.cd(defaultPathForItemType(type))) {
+		QFile file(search.absoluteFilePath(name));
 
 		if (file.open(QFile::ReadOnly)) {
 			return file.readAll();
@@ -51,76 +52,40 @@ QByteArray LYTDirectoryPackage::getFileFromSubDirIfExists(QString dirName, QStri
 	return QByteArray();
 }
 
+bool LYTDirectoryPackage::write(ItemType type, const QString &name, const QByteArray &data) {
+	QDir search(m_path);
+    QString dirName = defaultPathForItemType(type);
 
-bool LYTDirectoryPackage::writeFileToSubDir(QString dirName, QString fileName, QByteArray data) {
+    if (!search.cd(dirName)) {
+        if (!search.mkdir(dirName))
+            return false;
+        if (!search.cd(dirName))
+            return false;
+    }
+
+    QFile file(search.absoluteFilePath(name));
+
+    if (file.open(QFile::WriteOnly)) {
+        if (file.write(data) != -1) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool LYTDirectoryPackage::remove(ItemType type, const QString &name) {
 	QDir search(m_path);
 
-	if (search.cd(dirName)) {
-		QFile file(search.absoluteFilePath(fileName));
+	if (search.cd(defaultPathForItemType(type))) {
+		QFile file(search.absoluteFilePath(name));
 
 		if (file.open(QFile::WriteOnly)) {
-			if (file.write(data) != -1) {
-				return true;
-			}
+			return file.remove();
 		}
 	}
 
 	return false;
-}
-
-
-
-
-QStringList LYTDirectoryPackage::listAnims() const {
-	return this->listSubDirIfExists("anim");
-}
-
-QStringList LYTDirectoryPackage::listLayouts() const {
-	return this->listSubDirIfExists("blyt");
-}
-
-QStringList LYTDirectoryPackage::listTextures() const {
-	return this->listSubDirIfExists("timg");
-}
-
-QStringList LYTDirectoryPackage::listFonts() const {
-	return this->listSubDirIfExists("font");
-}
-
-
-
-QByteArray LYTDirectoryPackage::getAnim(QString name) const {
-	return this->getFileFromSubDirIfExists("anim", name);
-}
-
-QByteArray LYTDirectoryPackage::getLayout(QString name) const {
-	return this->getFileFromSubDirIfExists("blyt", name);
-}
-
-QByteArray LYTDirectoryPackage::getTexture(QString name) const {
-	return this->getFileFromSubDirIfExists("timg", name);
-}
-
-QByteArray LYTDirectoryPackage::getFont(QString name) const {
-	return this->getFileFromSubDirIfExists("font", name);
-}
-
-
-
-bool LYTDirectoryPackage::writeAnim(QString name, QByteArray data) {
-	return this->writeFileToSubDir("anim", name, data);
-}
-
-bool LYTDirectoryPackage::writeLayout(QString name, QByteArray data) {
-	return this->writeFileToSubDir("blyt", name, data);
-}
-
-bool LYTDirectoryPackage::writeTexture(QString name, QByteArray data) {
-	return this->writeFileToSubDir("timg", name, data);
-}
-
-bool LYTDirectoryPackage::writeFont(QString name, QByteArray data) {
-	return this->writeFileToSubDir("font", name, data);
 }
 
 

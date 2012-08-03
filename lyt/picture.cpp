@@ -21,6 +21,7 @@
 
 
 LYTPicture::LYTPicture(LYTLayout &layout) : LYTPane(layout) {
+	m_type = PictureType;
 }
 
 

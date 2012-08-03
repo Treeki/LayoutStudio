@@ -22,39 +22,29 @@
 #include "wii/archiveu8.h"
 
 class LYTArchivePackage : public LYTPackageBase {
+	Q_OBJECT
 public:
-	LYTArchivePackage();
-	LYTArchivePackage(QString filename);
+	LYTArchivePackage(QObject *parent = 0);
+	LYTArchivePackage(QString filename, QObject *parent = 0);
 
 	~LYTArchivePackage();
 
-	QStringList listAnims() const;
-	QStringList listLayouts() const;
-	QStringList listTextures() const;
-	QStringList listFonts() const;
+	QStringList list(ItemType type) const;
+	QByteArray get(ItemType type, const QString &name) const;
+	bool write(ItemType type, const QString &name, const QByteArray &data);
+	bool rename(ItemType type, const QString &from, const QString &to);
+	bool remove(ItemType type, const QString &name);
 
-	QByteArray getAnim(QString name) const;
-	QByteArray getLayout(QString name) const;
-	QByteArray getTexture(QString name) const;
-	QByteArray getFont(QString name) const;
-
-	bool writeAnim(QString name, QByteArray data);
-	bool writeLayout(QString name, QByteArray data);
-	bool writeTexture(QString name, QByteArray data);
-	bool writeFont(QString name, QByteArray data);
-
+	bool needsExplicitSave() const { return true; }
 	bool savePackage();
 	QString description() const;
 
 	WiiArchiveU8 *archive() const;
 	QString filename() const;
+    void setFilename(QString path);
 
 
 protected:
-	QStringList listSubDirIfExists(QString dirName) const;
-	QByteArray getFileFromSubDirIfExists(QString dirName, QString fileName) const;
-	bool writeFileToSubDir(QString dirName, QString fileName, QByteArray data);
-
 	WiiArchiveU8 *m_archive;
 	QString m_filename;
 };

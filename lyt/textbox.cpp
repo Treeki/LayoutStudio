@@ -21,6 +21,7 @@
 
 
 LYTTextBox::LYTTextBox(LYTLayout &layout) : LYTPane(layout) {
+	m_type = TextBoxType;
 }
 
 

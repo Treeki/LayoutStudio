@@ -18,18 +18,52 @@
 #ifndef LSMAINWINDOW_H
 #define LSMAINWINDOW_H
 
-#include "ui_lsmainwindow.h"
+#include "lyt/packagebase.h"
+#include "lspackagemodel.h"
+#include <QMainWindow>
+#include <QTreeView>
+#include <QSignalMapper>
 
 class LSMainWindow : public QMainWindow {
     Q_OBJECT
 public:
     LSMainWindow(QWidget *parent = 0);
+    ~LSMainWindow();
 
 protected:
-    void changeEvent(QEvent *e);
+    bool ensureSaved();
+
+public:
+    void updateTitleBar();
+
+public slots:
+    void newArchive();
+    void openArchive();
+    void save();
+    void saveArchiveAs();
+
+private slots:
+	void handleAddSomething(int whatToAdd);
 
 private:
-    Ui::LSMainWindow ui;
+    LYTPackageBase *m_package;
+    void setCurrentPackage(LYTPackageBase *pkg);
+
+	void createActions();
+	QAction *m_newArchiveAction, *m_openArchiveAction, *m_saveArchiveAsAction;
+	QAction *m_saveAction;
+
+	QAction *m_addLayoutAction, *m_addAnimationAction;
+	QAction *m_addTextureAction;
+	QSignalMapper *m_addActionMapper;
+	QAction *m_importNewAction, *m_importAction;
+	QAction *m_renameAction, *m_removeAction, *m_exportAction;
+
+	LSPackageModel *m_model;
+	QTreeView *m_view;
+
+    bool m_dirty;
+    bool m_isSaved;
 };
 
 #endif // LSMAINWINDOW_H
