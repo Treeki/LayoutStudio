@@ -44,6 +44,8 @@ public slots:
 
 private slots:
 	void handleAddSomething(int whatToAdd);
+	void handleRenameItem();
+	void handleRemoveItem();
 
 private:
     LYTPackageBase *m_package;
@@ -64,6 +66,10 @@ private:
 
     bool m_dirty;
     bool m_isSaved;
+
+protected:
+	QString selectedItem() const;
+	LYTPackageBase::ItemType selectedItemType() const;
 };
 
 #endif // LSMAINWINDOW_H

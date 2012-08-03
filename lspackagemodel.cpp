@@ -148,3 +148,16 @@ void LSPackageModel::handleFileWasRenamed(LYTPackageBase::ItemType type, QString
 	if (toIdx != fromIdx)
 		endMoveRows();
 }
+
+
+QString LSPackageModel::itemNameForIndex(const QModelIndex &index) const {
+	if (index.internalId() > 0)
+		return m_caches[index.internalId() - 1].at(index.row());
+	return QString();
+}
+
+LYTPackageBase::ItemType LSPackageModel::itemTypeForIndex(const QModelIndex &index) const {
+	if (index.internalId() > 0)
+		return ContentKinds[index.internalId() - 1].type;
+	return (LYTPackageBase::ItemType)-1;
+}

@@ -17,7 +17,10 @@ public:
 	int rowCount(const QModelIndex &parent) const;
 	int columnCount(const QModelIndex &parent) const;
 	QVariant data(const QModelIndex &index, int role) const;
-	
+
+	QString itemNameForIndex(const QModelIndex &index) const;
+	LYTPackageBase::ItemType itemTypeForIndex(const QModelIndex &index) const;
+
 signals:
 	
 private slots:
