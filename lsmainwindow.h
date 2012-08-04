@@ -46,6 +46,7 @@ private slots:
 	void handleAddSomething(int whatToAdd);
 	void handleRenameItem();
 	void handleRemoveItem();
+	void handleItemActivated(const QModelIndex &index);
 
 private:
     LYTPackageBase *m_package;

@@ -22,6 +22,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include "lyt/archivepackage.h"
+#include "lslayoutwindow.h"
 
 LSMainWindow::LSMainWindow(QWidget *parent) : QMainWindow(parent) {
 	m_package = 0;
@@ -32,6 +33,8 @@ LSMainWindow::LSMainWindow(QWidget *parent) : QMainWindow(parent) {
 
 	m_view = new QTreeView(this);
 	setCentralWidget(m_view);
+
+	connect(m_view, SIGNAL(activated(QModelIndex)), SLOT(handleItemActivated(QModelIndex)));
 
 	newArchive();
 }
@@ -180,6 +183,22 @@ QString LSMainWindow::selectedItem() const {
 LYTPackageBase::ItemType LSMainWindow::selectedItemType() const {
 	QModelIndex idx = m_view->currentIndex();
 	return m_model->itemTypeForIndex(idx);
+}
+
+
+void LSMainWindow::handleItemActivated(const QModelIndex &index) {
+	QString what = selectedItem();
+	LYTPackageBase::ItemType whatType = selectedItemType();
+
+	if (what.isEmpty())
+		return;
+
+	switch (whatType) {
+	case LYTPackageBase::Layout:
+		LSLayoutWindow *w = new LSLayoutWindow(m_package, what);
+		w->show();
+		break;
+	}
 }
 
 
