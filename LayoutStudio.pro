@@ -37,7 +37,8 @@ SOURCES += main.cpp \
 	layoutgl/widget.cpp \
     wii/texpalette.cpp \
     lspackagemodel.cpp \
-    lslayoutwindow.cpp
+    lslayoutwindow.cpp \
+    lsscenemodel.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -73,7 +74,8 @@ HEADERS += lsmainwindow.h \
     wii/texpalette.h \
     wii/gx.h \
     lspackagemodel.h \
-    lslayoutwindow.h
+    lslayoutwindow.h \
+    lsscenemodel.h
 FORMS +=
 RESOURCES += resources.qrc
 

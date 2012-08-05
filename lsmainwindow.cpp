@@ -32,6 +32,7 @@ LSMainWindow::LSMainWindow(QWidget *parent) : QMainWindow(parent) {
 	createActions();
 
 	m_view = new QTreeView(this);
+	m_view->setHeaderHidden(true);
 	setCentralWidget(m_view);
 
 	connect(m_view, SIGNAL(activated(QModelIndex)), SLOT(handleItemActivated(QModelIndex)));
