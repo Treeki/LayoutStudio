@@ -36,7 +36,7 @@ public:
 	virtual Magic magic() const;
 
 	enum PaneTypes {
-		PaneType = 0, PictureType, TextBoxType, WindowType, BoundingType
+		PaneType = 0, PictureType, TextBoxType, WindowType, BoundingType, PaneTypeCount
 	};
 
 	virtual void writeToDataStream(QDataStream &out) const;

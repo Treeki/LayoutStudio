@@ -1,9 +1,16 @@
 #include "lsscenemodel.h"
+#include "lsglobals.h"
 
 LSSceneModel::LSSceneModel(LYTLayout *layout, QObject *parent) :
 	QAbstractItemModel(parent)
 {
 	m_layout = layout;
+
+	m_paneIcons[LYTPane::PaneType] = LSGlobals::getIcon("pane");
+	m_paneIcons[LYTPane::PictureType] = LSGlobals::getIcon("picture");
+	m_paneIcons[LYTPane::TextBoxType] = LSGlobals::getIcon("textbox");
+	m_paneIcons[LYTPane::WindowType] = LSGlobals::getIcon("window");
+	m_paneIcons[LYTPane::BoundingType] = LSGlobals::getIcon("bounding");
 }
 
 
@@ -45,6 +52,7 @@ int LSSceneModel::rowCount(const QModelIndex &parent) const {
 }
 
 int LSSceneModel::columnCount(const QModelIndex &parent) const {
+	(void)parent;
 	return 1;
 }
 
@@ -54,6 +62,8 @@ QVariant LSSceneModel::data(const QModelIndex &index, int role) const {
 		switch (role) {
 		case Qt::DisplayRole:
 			return pane->name;
+		case Qt::DecorationRole:
+			return m_paneIcons[pane->type()];
 		}
 	}
 	return QVariant();

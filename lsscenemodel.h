@@ -2,6 +2,7 @@
 #define LSSCENEMODEL_H
 
 #include <QAbstractItemModel>
+#include <QIcon>
 #include "lyt/layout.h"
 
 class LSSceneModel : public QAbstractItemModel {
@@ -19,6 +20,8 @@ public:
 
 private:
 	LYTLayout *m_layout;
+
+	QIcon m_paneIcons[LYTPane::PaneTypeCount];
 	
 signals:
 	
