@@ -75,6 +75,10 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_widthBox->setValue(m_layout->width);
 	m_heightBox->setValue(m_layout->height);
 
+	m_sceneGraph->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	m_sceneGraph->setDragEnabled(true);
+	m_sceneGraph->setAcceptDrops(true);
+	m_sceneGraph->setDropIndicatorShown(true);
 	m_sceneGraph->setModel(new LSSceneModel(m_layout, this));
 	m_sceneGraph->expandAll();
 

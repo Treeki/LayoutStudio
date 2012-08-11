@@ -58,3 +58,20 @@ QVariant LSSceneModel::data(const QModelIndex &index, int role) const {
 	}
 	return QVariant();
 }
+
+
+Qt::ItemFlags LSSceneModel::flags(const QModelIndex &index) const {
+	Qt::ItemFlags flag;
+	flag = Qt::ItemIsEnabled | Qt::ItemIsSelectable |
+			Qt::ItemIsDropEnabled | Qt::ItemIsEditable;
+
+	if (index.isValid() && index.parent().isValid())
+		flag |= Qt::ItemIsDragEnabled;
+
+	return flag;
+}
+
+
+Qt::DropActions LSSceneModel::supportedDropActions() const {
+	return Qt::CopyAction | Qt::MoveAction;
+}

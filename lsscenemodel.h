@@ -17,6 +17,9 @@ public:
 	int columnCount(const QModelIndex &parent) const;
 	QVariant data(const QModelIndex &index, int role) const;
 
+	Qt::ItemFlags flags(const QModelIndex &index) const;
+	Qt::DropActions supportedDropActions() const;
+
 private:
 	LYTLayout *m_layout;
 	
