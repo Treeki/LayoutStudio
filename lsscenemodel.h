@@ -31,7 +31,7 @@ private:
 	QIcon m_paneIcons[LYTPane::PaneTypeCount];
 
 	QPersistentModelIndex *m_movingPaneParent;
-	int m_movingPaneRow;
+	int m_movingPaneRow, m_movingPaneCount;
 	
 signals:
 	

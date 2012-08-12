@@ -105,11 +105,6 @@ Qt::DropActions LSSceneModel::supportedDropActions() const {
 bool LSSceneModel::insertRows(int row, int count, const QModelIndex &parent) {
 	qDebug("LSSceneModel::insertRows(%d, %d, something)", row, count);
 
-	if (count != 1) {
-		qWarning("huh, what? count != 1");
-		return false;
-	}
-
 	if (m_movingPaneParent) {
 		qWarning("huh, already moving something? dunno");
 		return false;
@@ -117,6 +112,7 @@ bool LSSceneModel::insertRows(int row, int count, const QModelIndex &parent) {
 
 	m_movingPaneParent = new QPersistentModelIndex(parent);
 	m_movingPaneRow = row;
+	m_movingPaneCount = count;
 
 	return true;
 }
@@ -124,24 +120,25 @@ bool LSSceneModel::insertRows(int row, int count, const QModelIndex &parent) {
 bool LSSceneModel::removeRows(int row, int count, const QModelIndex &parent) {
 	qDebug("LSSceneModel::removeRows(%d, %d, something)", row, count);
 
-	if (count != 1) {
-		qWarning("huh, what? count != 1");
-		return false;
-	}
-
 	if (!m_movingPaneParent) {
-		qWarning("huh, not moving anything? dunno");
+		qWarning("huh, not moving anything / nothing left to move? dunno");
 		return false;
 	}
 
+	// detach all the existing panes
 	LYTPane *parentPane = (LYTPane*)parent.internalPointer();
-	LYTPane *pane = parentPane->children.at(row);
 
-	beginRemoveRows(parent, row, row);
-	parentPane->children.removeAt(row);
+	QVector<LYTPane *> removingPanes;
+	removingPanes.reserve(count);
+
+	beginRemoveRows(parent, row, row + count - 1);
+	for (int i = 0; i < count; i++) {
+		removingPanes.append(parentPane->children.at(row));
+		parentPane->children.removeAt(row);
+	}
 	endRemoveRows();
 
-	// now add it!
+	// now add them in their new homes!
 	LYTPane *newParentPane = (LYTPane*)m_movingPaneParent->internalPointer();
 
 	// note: compensate for the offset: if we're moving the thing within the
@@ -149,17 +146,28 @@ bool LSSceneModel::removeRows(int row, int count, const QModelIndex &parent) {
 	// removing the source row will have changed the index of the row the user
 	// actually wanted to move the moved row to... what a terrible sentence :|
 	if (*m_movingPaneParent == parent && m_movingPaneRow > row)
-		m_movingPaneRow--;
+		m_movingPaneRow -= count;
 
-	beginInsertRows(*m_movingPaneParent, m_movingPaneRow, m_movingPaneRow);
+	beginInsertRows(*m_movingPaneParent, m_movingPaneRow, m_movingPaneRow + count - 1);
 
-	pane->parent = newParentPane;
-	newParentPane->children.insert(m_movingPaneRow, pane);
+	for (int i = 0; i < count; i++) {
+		LYTPane *pane = removingPanes.at(i);
+
+		pane->parent = newParentPane;
+		newParentPane->children.insert(m_movingPaneRow, pane);
+
+		m_movingPaneRow++;
+	}
 
 	endInsertRows();
 
-	delete m_movingPaneParent;
-	m_movingPaneParent = 0;
+	// clean up if needed
+	m_movingPaneCount -= count;
+
+	if (m_movingPaneCount <= 0) {
+		delete m_movingPaneParent;
+		m_movingPaneParent = 0;
+	}
 
 	return true;
 }
