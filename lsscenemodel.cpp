@@ -11,6 +11,13 @@ LSSceneModel::LSSceneModel(LYTLayout *layout, QObject *parent) :
 	m_paneIcons[LYTPane::TextBoxType] = LSGlobals::getIcon("textbox");
 	m_paneIcons[LYTPane::WindowType] = LSGlobals::getIcon("window");
 	m_paneIcons[LYTPane::BoundingType] = LSGlobals::getIcon("bounding");
+
+	m_movingPaneParent = 0;
+}
+
+LSSceneModel::~LSSceneModel() {
+	if (m_movingPaneParent)
+		delete m_movingPaneParent;
 }
 
 
@@ -83,5 +90,77 @@ Qt::ItemFlags LSSceneModel::flags(const QModelIndex &index) const {
 
 
 Qt::DropActions LSSceneModel::supportedDropActions() const {
-	return Qt::CopyAction | Qt::MoveAction;
+	return Qt::MoveAction;
 }
+
+
+// I am doing a terrible, terrible, terrible thing here.
+// I hate drag-and-drop.
+
+// As far as I can see, insertRows and removeRows are ONLY called by Qt when
+// dragging something. So instead of doing a real insertion/removal... I'll
+// store the intended destination, and once I'm told what pane needs to be
+// removed (moved) I do the whole thing at once.
+
+bool LSSceneModel::insertRows(int row, int count, const QModelIndex &parent) {
+	qDebug("LSSceneModel::insertRows(%d, %d, something)", row, count);
+
+	if (count != 1) {
+		qWarning("huh, what? count != 1");
+		return false;
+	}
+
+	if (m_movingPaneParent) {
+		qWarning("huh, already moving something? dunno");
+		return false;
+	}
+
+	m_movingPaneParent = new QPersistentModelIndex(parent);
+	m_movingPaneRow = row;
+
+	return true;
+}
+
+bool LSSceneModel::removeRows(int row, int count, const QModelIndex &parent) {
+	qDebug("LSSceneModel::removeRows(%d, %d, something)", row, count);
+
+	if (count != 1) {
+		qWarning("huh, what? count != 1");
+		return false;
+	}
+
+	if (!m_movingPaneParent) {
+		qWarning("huh, not moving anything? dunno");
+		return false;
+	}
+
+	LYTPane *parentPane = (LYTPane*)parent.internalPointer();
+	LYTPane *pane = parentPane->children.at(row);
+
+	beginRemoveRows(parent, row, row);
+	parentPane->children.removeAt(row);
+	endRemoveRows();
+
+	// now add it!
+	LYTPane *newParentPane = (LYTPane*)m_movingPaneParent->internalPointer();
+
+	// note: compensate for the offset: if we're moving the thing within the
+	// same parent and the destination row is higher than the source row, then
+	// removing the source row will have changed the index of the row the user
+	// actually wanted to move the moved row to... what a terrible sentence :|
+	if (*m_movingPaneParent == parent && m_movingPaneRow > row)
+		m_movingPaneRow--;
+
+	beginInsertRows(*m_movingPaneParent, m_movingPaneRow, m_movingPaneRow);
+
+	pane->parent = newParentPane;
+	newParentPane->children.insert(m_movingPaneRow, pane);
+
+	endInsertRows();
+
+	delete m_movingPaneParent;
+	m_movingPaneParent = 0;
+
+	return true;
+}
+
