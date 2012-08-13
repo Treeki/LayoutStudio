@@ -110,6 +110,11 @@ bool LSSceneModel::insertRows(int row, int count, const QModelIndex &parent) {
 		return false;
 	}
 
+	if (!parent.isValid()) {
+		qWarning("can't move stuff to the top level");
+		return false;
+	}
+
 	m_movingPaneParent = new QPersistentModelIndex(parent);
 	m_movingPaneRow = row;
 	m_movingPaneCount = count;
