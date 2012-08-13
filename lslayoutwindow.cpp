@@ -1,5 +1,6 @@
 #include "lslayoutwindow.h"
 #include "lsscenemodel.h"
+#include "layoutgl/widget.h"
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QGroupBox>
@@ -83,9 +84,25 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_sceneGraph->expandAll();
 
 	setWindowTitle(m_layoutName);
+
+
+	// finally make the widget
+	m_renderer = new LGLWidget();
+	m_renderer->setLayout(m_layout);
+	m_renderer->setWindowTitle(QString("Preview: %1").arg(m_layoutName));
+	m_renderer->setWindowFlags(
+				Qt::CustomizeWindowHint |
+				Qt::WindowTitleHint |
+				Qt::WindowMinimizeButtonHint);
+	m_renderer->show();
+
+	// clean up here
+	setAttribute(Qt::WA_DeleteOnClose);
 }
 
 LSLayoutWindow::~LSLayoutWindow() {
+	m_renderer->close();
+	delete m_renderer;
 	delete m_layout;
 }
 

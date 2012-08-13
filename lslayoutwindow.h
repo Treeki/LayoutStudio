@@ -11,6 +11,7 @@
 #include <QListView>
 #include "lyt/packagebase.h"
 #include "lyt/layout.h"
+class LGLWidget;
 
 class LSLayoutWindow : public QMainWindow {
 	Q_OBJECT
@@ -27,6 +28,8 @@ private:
 	QString m_layoutName;
 	LYTPackageBase *m_package;
 	LYTLayout *m_layout;
+
+	LGLWidget *m_renderer;
 
 	QTabWidget *m_tabWidget;
 
