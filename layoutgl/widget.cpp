@@ -316,10 +316,10 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 		if (!mBR.texMaps.empty()) {
 			useMaterial(mBR);
 
-			float pieceWidth = frameRight;
-			float pieceHeight = wnd->height - frameBottom;
+			float pieceWidth = wnd->width - frameLeft;
+			float pieceHeight = frameBottom;
 
-			dealWithWindowFrame(texCoords, fBR.materialName, fBR.type, pieceWidth, pieceHeight, 6, 4, 0, 2);
+			dealWithWindowFrame(texCoords, fBR.materialName, fBR.type, pieceWidth, pieceHeight, 6, 4, 2, 0);
 
 			drawQuad(dX + frameLeft, dY - wnd->height + frameBottom, pieceWidth, pieceHeight,
 					 1, &texCoords, 0, wnd->alpha);
