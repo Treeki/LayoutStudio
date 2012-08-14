@@ -50,6 +50,14 @@ void LGLWidget::paintGL() {
 
 	renderPane(m_layout->rootPane);
 
+	// now, debugging/editing aids
+	// first off reset the textures
+	for (int i = 0; i < 8; i++) {
+		glActiveTexture(GL_TEXTURE0+i);
+		glDisable(GL_TEXTURE_2D);
+	}
+	glActiveTexture(GL_TEXTURE0);
+
 	glColor3ub(255, 0, 0);
 	float halfW = m_layout->width / 2.0f;
 	float halfH = m_layout->height / 2.0f;
