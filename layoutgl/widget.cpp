@@ -83,8 +83,8 @@ void LGLWidget::drawPicture(const LYTPicture *pic) {
 
 	drawQuad(dX, dY, pic->width, pic->height, pic->texCoords, pic->vtxColours, pic->alpha);
 
-	glColor3ub(255, 255, 255);
-	renderText(dX, (dY-pic->height)+10, 0, pic->name);
+	//glColor3ub(255, 255, 255);
+	//renderText(dX, (dY-pic->height)+10, 0, pic->name);
 }
 
 struct TexFlipBit {
@@ -153,7 +153,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 
 	// draw the content
 	useMaterial(wnd->contentMaterialName);
-	qDebug() << "content material:" << wnd->contentMaterialName;
+	//qDebug() << "content material:" << wnd->contentMaterialName;
 	drawQuad(
 				dX + frameLeft - wnd->contentOverflowLeft,
 				dY - frameTop + wnd->contentOverflowTop,
