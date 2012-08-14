@@ -9,7 +9,7 @@ void LGLWidget::setLayout(LYTLayout *layout) {
 	// TODO: cleanup stuff for previous layout
 
 	m_layout = layout;
-	setFixedSize(layout->width, layout->height);
+	resize(layout->width + 64, layout->height + 64);
 }
 
 
@@ -33,7 +33,10 @@ void LGLWidget::resizeGL(int w, int h) {
 	glViewport(0, 0, (GLint)w, (GLint)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-304, 304, -228, 228, -100, 100);
+
+	float halfW = w / 2.0f, halfH = h / 2.0f;
+
+	glOrtho(-halfW, halfW, -halfH, halfH, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -46,6 +49,47 @@ void LGLWidget::paintGL() {
 	glLoadIdentity();
 
 	renderPane(m_layout->rootPane);
+
+	glColor3ub(255, 0, 0);
+	float halfW = m_layout->width / 2.0f;
+	float halfH = m_layout->height / 2.0f;
+
+	const float lineExtension = 12.0f;
+	glBegin(GL_QUADS);
+
+	// top line
+	glVertex2f(-halfW - 1.0f - lineExtension, halfH + 1.0f);
+	glVertex2f(halfW + 1.0f + lineExtension, halfH + 1.0f);
+	glVertex2f(halfW + 1.0f + lineExtension, halfH);
+	glVertex2f(-halfW - 1.0f - lineExtension, halfH);
+	// bottom line
+	glVertex2f(-halfW - 1.0f - lineExtension, -halfH);
+	glVertex2f(halfW + 1.0f + lineExtension, -halfH);
+	glVertex2f(halfW + 1.0f + lineExtension, -halfH - 1.0f);
+	glVertex2f(-halfW - 1.0f - lineExtension, -halfH - 1.0f);
+	// left line
+	glVertex2f(-halfW - 1.0f, halfH + 1.0f + lineExtension);
+	glVertex2f(-halfW, halfH + 1.0f + lineExtension);
+	glVertex2f(-halfW, -halfH - 1.0f - lineExtension);
+	glVertex2f(-halfW - 1.0f, -halfH - 1.0f - lineExtension);
+	// right line
+	glVertex2f(halfW, halfH + 1.0f + lineExtension);
+	glVertex2f(halfW + 1.0f, halfH + 1.0f + lineExtension);
+	glVertex2f(halfW + 1.0f, -halfH - 1.0f - lineExtension);
+	glVertex2f(halfW, -halfH - 1.0f - lineExtension);
+
+	// centre: horizontal
+	glVertex2f(-lineExtension, 0.5f);
+	glVertex2f(lineExtension, 0.5f);
+	glVertex2f(lineExtension, -0.5f);
+	glVertex2f(-lineExtension, -0.5f);
+	// centre: vertical
+	glVertex2f(-0.5f, lineExtension);
+	glVertex2f(0.5f, lineExtension);
+	glVertex2f(0.5f, -lineExtension);
+	glVertex2f(-0.5f, -lineExtension);
+
+	glEnd();
 }
 
 void LGLWidget::renderPane(const LYTPane *pane) {
