@@ -326,6 +326,59 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 		}
 	}
 		break;
+	case 8:
+	{
+		qDebug() << "WHOA!!!";
+		// top left
+		const LYTWindowFrame &fTL = *wnd->frames.at(0);
+		const LYTMaterial &mTL = getMaterial(fTL.materialName);
+
+		if (!mTL.texMaps.empty()) {
+			useMaterial(mTL);
+
+			dealWithWindowFrame(texCoords, fTL.materialName, fTL.type, frameLeft, frameTop, 0, 2, 4, 6);
+			drawQuad(dX, dY, frameLeft, frameTop, 1, &texCoords, 0, wnd->alpha);
+		}
+
+		// top right
+		const LYTWindowFrame &fTR = *wnd->frames.at(1);
+		const LYTMaterial &mTR = getMaterial(fTR.materialName);
+
+		if (!mTR.texMaps.empty()) {
+			useMaterial(mTR);
+
+			dealWithWindowFrame(texCoords, fTR.materialName, fTR.type, frameRight, frameTop, 2, 0, 6, 4);
+
+			drawQuad(dX + wnd->width - frameRight, dY, frameRight, frameTop,
+					 1, &texCoords, 0, wnd->alpha);
+		}
+
+		// bottom left
+		const LYTWindowFrame &fBL = *wnd->frames.at(2);
+		const LYTMaterial &mBL = getMaterial(fBL.materialName);
+
+		if (!mBL.texMaps.empty()) {
+			useMaterial(mBL);
+
+			dealWithWindowFrame(texCoords, fBL.materialName, fBL.type, frameLeft, frameBottom, 4, 6, 0, 2);
+
+			drawQuad(dX, dY - frameTop, frameLeft, frameBottom,
+					 1, &texCoords, 0, wnd->alpha);
+		}
+
+		const LYTWindowFrame &fBR = *wnd->frames.at(3);
+		const LYTMaterial &mBR = getMaterial(fBR.materialName);
+
+		// bottom right
+		if (!mBR.texMaps.empty()) {
+			useMaterial(mBR);
+
+			dealWithWindowFrame(texCoords, fBR.materialName, fBR.type, frameRight, frameBottom, 6, 4, 2, 0);
+
+			drawQuad(dX + frameLeft, dY - wnd->height + frameBottom, frameRight, frameBottom,
+					 1, &texCoords, 0, wnd->alpha);
+		}
+	}
 	default:
 		qDebug() << "unhandled window frame count" << wnd->frames.count();
 	}
