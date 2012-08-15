@@ -1,9 +1,11 @@
 #include "lslayoutwindow.h"
 #include "lsscenemodel.h"
+#include "lspaneeditor.h"
 #include "layoutgl/widget.h"
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QGroupBox>
+#include <QSplitter>
 
 LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, QWidget *parent) :
 	QMainWindow(parent) {
@@ -48,6 +50,8 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_tabWidget->addTab(w, "Layout");
 
 	// prepare the Scene Graph tab
+	QSplitter *gsplit = new QSplitter(this);
+
 	w = new QWidget(this);
 	QGridLayout *ggrid = new QGridLayout(w);
 
@@ -67,7 +71,12 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	ggrid->addWidget(m_clearSearchButton, 0, 1, 1, 1);
 	ggrid->addLayout(m_sceneListSwitcher, 1, 0, 1, 2);
 
-	m_tabWidget->addTab(w, "Scene Graph");
+	m_paneEditor = new LSPaneEditor(this);
+
+	gsplit->addWidget(w);
+	gsplit->addWidget(m_paneEditor);
+
+	m_tabWidget->addTab(gsplit, "Scene Graph");
 
 
 	// get the resource

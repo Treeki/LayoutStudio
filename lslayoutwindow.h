@@ -11,6 +11,7 @@
 #include <QListView>
 #include "lyt/packagebase.h"
 #include "lyt/layout.h"
+class LSPaneEditor;
 class LGLWidget;
 
 class LSLayoutWindow : public QMainWindow {
@@ -42,6 +43,8 @@ private:
 	QPushButton *m_clearSearchButton;
 	QTreeView *m_sceneGraph;
 	QListView *m_sceneSearchList;
+
+	LSPaneEditor *m_paneEditor;
 
 private slots:
 	void handleWidthChanged(double v);
