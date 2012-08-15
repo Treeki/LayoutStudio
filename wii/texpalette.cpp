@@ -30,15 +30,20 @@ WiiTexPalette::WiiTexPalette(QDataStream &stream) {
 }
 
 static const int TexelWidths[] = {
-	8, 8, 8, 4, 4, 4, 4, -1, 8, 8, 4
+	8, 8, 8, 4, 4, 4, 4, -1, 8, 8, 4, -1, -1, -1, 8
 };
 
 static const int TexelHeights[] = {
-	8, 4, 4, 4, 4, 4, 4, -1, 8, 4, 4
+	8, 4, 4, 4, 4, 4, 4, -1, 8, 4, 4, -1, -1, -1, 8
 };
 
 static const int BitsPerPixel[] = {
-	4, 8, 8, 16, 16, 16, 32, -1, 8, 16
+	4, 8, 8, 16, 16, 16, 32, -1, 8, 16, -1, -1, -1, 4
+};
+
+static const char *FormatNames[] = {
+	"I4", "I8", "IA4", "IA8", "RGB565", "RGB5A3", "RGBA8", "_unused 7",
+	"CI4", "CI8", "CI14X2", "_unused 11", "_unused 12", "_unused 13", "CMPR"
 };
 
 // This bit shamelessly stolen from Dolphin, but it didn't QUITE work right...
@@ -50,6 +55,28 @@ inline uchar _3to8(uchar v) { return (v << 5); }
 inline uchar _4to8(uchar v) { return (v << 4); }
 inline uchar _5to8(uchar v) { return (v << 3); }
 inline uchar _6to8(uchar v) { return (v << 2); }
+
+
+static quint16 CMPRAvgColor(quint16 w0, quint16 w1, quint16 c0, quint16 c1) {
+	quint32 result;
+
+	quint16 a0 = (quint16)(c0 >> 11);
+	quint16 a1 = (quint16)(c1 >> 11);
+	quint32 a = (quint32)((w0*a0 + w1*a1) / (w0+w1));
+	result = (a << 11) & 0xffff;
+
+	a0 = (quint16)((c0 >> 5) & 63);
+	a1 = (quint16)((c1 >> 5) & 63);
+	a = (quint32)((w0*a0 + w1*a1) / (w0+w1));
+	result |= ((a << 5) & 0xffff);
+
+	a0 = (quint16)(c0 & 31);
+	a1 = (quint16)(c1 & 31);
+	a = (quint32)((w0*a0 + w1*a1) / (w0+w1));
+	result |= a;
+
+	return (quint16)result;
+}
 
 void WiiTexPalette::readTexture(QDataStream &in, int textureOffs, int paletteOffs, WiiTPLTexture &tex) {
 	in.device()->seek(textureOffs);
@@ -87,6 +114,8 @@ void WiiTexPalette::readTexture(QDataStream &in, int textureOffs, int paletteOff
 		qWarning("unknown texture format (%d)", rawFormat);
 		return;
 	}
+
+	qDebug() << "format:" << FormatNames[rawFormat] << "(" << rawFormat << "); size:" << width << "x" << height;
 
 	tex.image = QImage(width, height, QImage::Format_ARGB32);
 
@@ -268,6 +297,62 @@ void WiiTexPalette::readTexture(QDataStream &in, int textureOffs, int paletteOff
 							scanline[x] = qRgba(texel1.at(offs+1), texel2.at(offs), texel2.at(offs+1), texel1.at(offs));
 						}
 						offs += 2;
+					}
+				}
+			}
+		}
+	}
+		break;
+	case GX::CMPR:
+	{
+		quint16 rawClrArray[4];
+		QRgb clrArray[4];
+
+		for (int y = 0; y < paddedHeight; y += 8) {
+			for (int x = 0; x < paddedWidth; x += 8) {
+				for (int inBlockY = 0; inBlockY < 2; inBlockY++) {
+					for (int inBlockX = 0; inBlockX < 2; inBlockX++) {
+						in >> rawClrArray[0];
+						in >> rawClrArray[1];
+
+						bool hasAlpha = false;
+						if (rawClrArray[0] > rawClrArray[1]) {
+							rawClrArray[2] = CMPRAvgColor(2, 1, rawClrArray[0], rawClrArray[1]);
+							rawClrArray[3] = CMPRAvgColor(1, 2, rawClrArray[0], rawClrArray[1]);
+						} else {
+							rawClrArray[2] = CMPRAvgColor(1, 1, rawClrArray[0], rawClrArray[1]);
+							rawClrArray[3] = rawClrArray[1];
+							hasAlpha = true;
+						}
+
+						for (int i = 0; i < 4; i++) {
+							quint16 v = rawClrArray[i];
+
+							clrArray[i] = qRgba(
+										_5to8((v >> 11) & 0x1F),
+										_6to8((v >> 5) & 0x3F),
+										_5to8(v & 0x1F),
+										((i == 3) && hasAlpha) ? 0 : 255);
+						}
+
+						for (int inY = 0; inY < 4; inY++) {
+							quint8 v;
+							in >> v;
+
+							int finalY = y + (inBlockY * 4) + inY;
+							if (finalY < height) {
+								QRgb *scanline = (QRgb*)image.scanLine(finalY);
+
+								for (int inX = 0; inX < 4; inX++) {
+									int finalX = x + (inBlockX * 4) + inX;
+
+									if (finalX < width)
+										scanline[finalX] = clrArray[(v >> 6) & 3];
+
+									v <<= 2;
+								}
+							}
+						}
 					}
 				}
 			}
