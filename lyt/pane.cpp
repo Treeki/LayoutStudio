@@ -60,13 +60,19 @@ void LYTPane::dumpToDebug(bool showHeading) const {
 	qDebug() << "- Rotation:" << xRot << "," << yRot << "," << zRot;
 	qDebug() << "- Scale:" << xScale << "," << yScale;
 	qDebug() << "- Size:" << width << "x" << height;
-	qDebug() << "- Flags:" << flags << "- Origin:" << horzOrigin << "," << vertOrigin;
+	qDebug() << "- Visible:" << visible << "- Influenced Alpha:" << influencedAlpha << "- Widescreen:" << isWidescreen;
+	qDebug() << "- Origin:" << horzOrigin << "," << vertOrigin;
 	qDebug() << "- Alpha:" << alpha << "- Userdata:" << userdata;
 }
 
 
 
 void LYTPane::writeToDataStream(QDataStream &out) const {
+	quint8 flags =
+			(visible ? 1 : 0) |
+			(influencedAlpha ? 2 : 0) |
+			(isWidescreen ? 4 : 0);
+
 	out << (quint8)flags;
 	out << (quint8)((int)horzOrigin + ((int)vertOrigin * 3));
 	out << (quint8)alpha;
@@ -88,7 +94,13 @@ void LYTPane::writeToDataStream(QDataStream &out) const {
 }
 
 void LYTPane::readFromDataStream(QDataStream &in) {
-	in >> (quint8&)flags;
+	quint8 flags;
+	in >> flags;
+
+	visible = (flags & 1);
+	influencedAlpha = (flags & 2);
+	isWidescreen = (flags & 4);
+
 	quint8 rawOrigin;
 	in >> rawOrigin;
 	horzOrigin = (OriginType)(rawOrigin % 3);

@@ -53,7 +53,7 @@ public:
 	LYTPane *parent;
 	QList<LYTPane *> children;
 
-	quint8 flags;
+	bool visible, influencedAlpha, isWidescreen;
 
 	enum OriginType {
 		Left = 0, Top = 0,
