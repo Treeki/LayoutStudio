@@ -101,6 +101,9 @@ void LGLWidget::paintGL() {
 }
 
 void LGLWidget::renderPane(const LYTPane *pane) {
+	if (!pane->visible)
+		return;
+
 	glPushMatrix();
 
 	glScalef(pane->xScale, pane->yScale, 1.0f);
@@ -441,7 +444,7 @@ void LGLWidget::drawQuad(float x, float y, float w, float h, const QVector<LYTTe
 
 void LGLWidget::drawQuad(float x, float y, float w, float h, int texCoordCount, const LYTTexCoords *texCoords, const QColor *colours, uchar alpha) {
 	if (!colours)
-		glColor4ub(255, 255, 255, 255);
+		glColor4ub(255, 255, 255, alpha);
 
 	glBegin(GL_QUADS);
 
@@ -449,28 +452,28 @@ void LGLWidget::drawQuad(float x, float y, float w, float h, int texCoordCount, 
 		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[0].x(), 1.0f-texCoords[i].coord[0].y());
 
 	if (colours)
-		qglColor(colours[0]);
+		glColor4ub(colours[0].red(), colours[0].green(), colours[0].blue(), (colours[0].alpha() * alpha) / 255);
 	glVertex2f(x, y);
 
 	for (int i = 0; i < texCoordCount; i++)
 		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[1].x(), 1.0f-texCoords[i].coord[1].y());
 
 	if (colours)
-		qglColor(colours[1]);
+		glColor4ub(colours[1].red(), colours[1].green(), colours[1].blue(), (colours[1].alpha() * alpha) / 255);
 	glVertex2f(x + w, y);
 
 	for (int i = 0; i < texCoordCount; i++)
 		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[3].x(), 1.0f-texCoords[i].coord[3].y());
 
 	if (colours)
-		qglColor(colours[2]);
+		glColor4ub(colours[2].red(), colours[2].green(), colours[2].blue(), (colours[2].alpha() * alpha) / 255);
 	glVertex2f(x + w, y - h);
 
 	for (int i = 0; i < texCoordCount; i++)
 		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[2].x(), 1.0f-texCoords[i].coord[2].y());
 
 	if (colours)
-		qglColor(colours[3]);
+		glColor4ub(colours[3].red(), colours[3].green(), colours[3].blue(), (colours[3].alpha() * alpha) / 255);
 	glVertex2f(x, y - h);
 
 	glEnd();
