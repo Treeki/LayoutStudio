@@ -21,10 +21,10 @@ protected:
 
 	LYTLayout *m_layout;
 
-	void renderPane(const LYTPane *pane);
+	void renderPane(const LYTPane *pane, quint8 parentAlpha);
 
-	void drawPicture(const LYTPicture *pic);
-	void drawWindow(const LYTWindow *wnd);
+	void drawPicture(const LYTPicture *pic, quint8 effectiveAlpha);
+	void drawWindow(const LYTWindow *wnd, quint8 effectiveAlpha);
 
 	const LYTMaterial &getMaterial(const QString &materialName) {
 		return *m_layout->materials.getMaterialByName(materialName);

@@ -48,7 +48,7 @@ void LGLWidget::paintGL() {
 
 	glLoadIdentity();
 
-	renderPane(m_layout->rootPane);
+	renderPane(m_layout->rootPane, 255);
 
 	// now, debugging/editing aids
 	// first off reset the textures
@@ -100,7 +100,7 @@ void LGLWidget::paintGL() {
 	glEnd();
 }
 
-void LGLWidget::renderPane(const LYTPane *pane) {
+void LGLWidget::renderPane(const LYTPane *pane, quint8 parentAlpha) {
 	if (!pane->visible)
 		return;
 
@@ -113,30 +113,33 @@ void LGLWidget::renderPane(const LYTPane *pane) {
 	glTranslatef(pane->xTrans, pane->yTrans, pane->zTrans);
 	//qDebug() << "Translating by" << pane->xTrans << pane->yTrans << pane->zTrans;
 
+	quint8 effectiveAlpha = (parentAlpha == 255) ? pane->alpha : ((pane->alpha * parentAlpha) / 255);
+
 	switch (pane->type()) {
 	case LYTPane::PictureType:
-		drawPicture((LYTPicture*)pane);
+		drawPicture((LYTPicture*)pane, effectiveAlpha);
 		break;
 	case LYTPane::WindowType:
-		drawWindow((LYTWindow*)pane);
+		drawWindow((LYTWindow*)pane, effectiveAlpha);
 		break;
 	}
 
+	quint8 childrenAlpha = pane->influencedAlpha ? effectiveAlpha : 255;
 	foreach (const LYTPane *childPane, pane->children)
-		renderPane(childPane);
+		renderPane(childPane, childrenAlpha);
 
 	//qDebug() << "Popping";
 	glPopMatrix();
 }
 
-void LGLWidget::drawPicture(const LYTPicture *pic) {
+void LGLWidget::drawPicture(const LYTPicture *pic, quint8 effectiveAlpha) {
 	float dX = pic->drawnVertexX();
 	float dY = pic->drawnVertexY();
 	//qDebug() << "Drawing" << dX << dY << pic->width << pic->height;
 
 	useMaterial(pic->materialName);
 
-	drawQuad(dX, dY, pic->width, pic->height, pic->texCoords, pic->vtxColours, pic->alpha);
+	drawQuad(dX, dY, pic->width, pic->height, pic->texCoords, pic->vtxColours, effectiveAlpha);
 
 	//glColor3ub(255, 255, 255);
 	//renderText(dX, (dY-pic->height)+10, 0, pic->name);
@@ -186,7 +189,7 @@ void LGLWidget::dealWithWindowFrame(LYTTexCoords &coords, const QString &materia
 	hack[rep4 + info.two] = assign4;
 }
 
-void LGLWidget::drawWindow(const LYTWindow *wnd) {
+void LGLWidget::drawWindow(const LYTWindow *wnd, quint8 effectiveAlpha) {
 	float dX = wnd->drawnVertexX();
 	float dY = wnd->drawnVertexY();
 
@@ -214,7 +217,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 				dY - frameTop + wnd->contentOverflowTop,
 				((wnd->contentOverflowLeft + (wnd->width - frameLeft)) - frameRight) + wnd->contentOverflowRight,
 				((wnd->contentOverflowTop + (wnd->height - frameTop)) - frameBottom) + wnd->contentOverflowBottom,
-				wnd->contentTexCoords, wnd->contentVtxColours, wnd->alpha);
+				wnd->contentTexCoords, wnd->contentVtxColours, effectiveAlpha);
 
 	// deal with the frame
 	LYTTexCoords texCoords;
@@ -233,7 +236,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			float pieceHeight = frameTop;
 
 			dealWithWindowFrame(texCoords, frame.materialName, 0, pieceWidth, pieceHeight, 0, 2, 4, 6);
-			drawQuad(dX, dY, pieceWidth, pieceHeight, 1, &texCoords, 0, wnd->alpha);
+			drawQuad(dX, dY, pieceWidth, pieceHeight, 1, &texCoords, 0, effectiveAlpha);
 
 			// top right
 			pieceWidth = frameRight;
@@ -242,7 +245,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, frame.materialName, 1, pieceWidth, pieceHeight, 2, 0, 6, 4);
 
 			drawQuad(dX + wnd->width - frameRight, dY, pieceWidth, pieceHeight,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 
 			// bottom left
 			pieceWidth = frameLeft;
@@ -251,7 +254,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, frame.materialName, 2, pieceWidth, pieceHeight, 4, 6, 0, 2);
 
 			drawQuad(dX, dY - frameTop, pieceWidth, pieceHeight,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 
 			// bottom right
 			pieceWidth = wnd->width - frameLeft;
@@ -260,7 +263,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, frame.materialName, 4, pieceWidth, pieceHeight, 6, 4, 2, 0);
 
 			drawQuad(dX + frameLeft, dY - wnd->height + frameBottom, pieceWidth, pieceHeight,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 		}
 	}
 		break;
@@ -277,7 +280,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			float pieceHeight = frameTop;
 
 			dealWithWindowFrame(texCoords, fTL.materialName, fTL.type, pieceWidth, pieceHeight, 0, 2, 4, 6);
-			drawQuad(dX, dY, pieceWidth, pieceHeight, 1, &texCoords, 0, wnd->alpha);
+			drawQuad(dX, dY, pieceWidth, pieceHeight, 1, &texCoords, 0, effectiveAlpha);
 		}
 
 		// top right
@@ -293,7 +296,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, fTR.materialName, fTR.type, pieceWidth, pieceHeight, 2, 0, 6, 4);
 
 			drawQuad(dX + wnd->width - frameRight, dY, pieceWidth, pieceHeight,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 		}
 
 		// bottom left
@@ -309,7 +312,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, fBL.materialName, fBL.type, pieceWidth, pieceHeight, 4, 6, 0, 2);
 
 			drawQuad(dX, dY - frameTop, pieceWidth, pieceHeight,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 		}
 
 		const LYTWindowFrame &fBR = *wnd->frames.at(3);
@@ -325,7 +328,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, fBR.materialName, fBR.type, pieceWidth, pieceHeight, 6, 4, 2, 0);
 
 			drawQuad(dX + frameLeft, dY - wnd->height + frameBottom, pieceWidth, pieceHeight,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 		}
 	}
 		break;
@@ -340,7 +343,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			useMaterial(mTL);
 
 			dealWithWindowFrame(texCoords, fTL.materialName, fTL.type, frameLeft, frameTop, 0, 2, 4, 6);
-			drawQuad(dX, dY, frameLeft, frameTop, 1, &texCoords, 0, wnd->alpha);
+			drawQuad(dX, dY, frameLeft, frameTop, 1, &texCoords, 0, effectiveAlpha);
 		}
 
 		// top right
@@ -353,7 +356,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, fTR.materialName, fTR.type, frameRight, frameTop, 2, 0, 6, 4);
 
 			drawQuad(dX + wnd->width - frameRight, dY, frameRight, frameTop,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 		}
 
 		// bottom left
@@ -366,7 +369,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, fBL.materialName, fBL.type, frameLeft, frameBottom, 4, 6, 0, 2);
 
 			drawQuad(dX, dY - frameTop, frameLeft, frameBottom,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 		}
 
 		const LYTWindowFrame &fBR = *wnd->frames.at(3);
@@ -379,7 +382,7 @@ void LGLWidget::drawWindow(const LYTWindow *wnd) {
 			dealWithWindowFrame(texCoords, fBR.materialName, fBR.type, frameRight, frameBottom, 6, 4, 2, 0);
 
 			drawQuad(dX + frameLeft, dY - wnd->height + frameBottom, frameRight, frameBottom,
-					 1, &texCoords, 0, wnd->alpha);
+					 1, &texCoords, 0, effectiveAlpha);
 		}
 	}
 	default:
