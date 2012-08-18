@@ -25,7 +25,6 @@ LSPaneEditor::LSPaneEditor(QWidget *parent) :
 	m_removeButton->setText("Remove This Pane");
 
 	m_tabs = new QTabWidget(this);
-	m_tabs->setVisible(false);
 
 	QGridLayout *layout = new QGridLayout(this);
 
@@ -175,9 +174,6 @@ void LSPaneEditor::createPaneTab() {
 void LSPaneEditor::setPane(LYTPane *pane) {
 	m_currentlyLoadingPane = true;
 	m_pane = pane;
-
-	m_tabs->setVisible(true);
-
 
 	m_nameEntry->setText(pane->name);
 	m_userDataEntry->setText(pane->userdata);

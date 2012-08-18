@@ -5,7 +5,6 @@
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QGroupBox>
-#include <QSplitter>
 
 LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, QWidget *parent) :
 	QMainWindow(parent) {
@@ -50,7 +49,7 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_tabWidget->addTab(w, "Layout");
 
 	// prepare the Scene Graph tab
-	QSplitter *gsplit = new QSplitter(this);
+	m_sceneSplitter = new QSplitter(this);
 
 	w = new QWidget(this);
 	QGridLayout *ggrid = new QGridLayout(w);
@@ -71,12 +70,19 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	ggrid->addWidget(m_clearSearchButton, 0, 1, 1, 1);
 	ggrid->addLayout(m_sceneListSwitcher, 1, 0, 1, 2);
 
-	m_paneEditor = new LSPaneEditor(this);
+	QWidget *switcherWidget = new QWidget(this);
+	m_paneEditorSwitcher = new QStackedLayout(switcherWidget);
 
-	gsplit->addWidget(w);
-	gsplit->addWidget(m_paneEditor);
+	m_paneEditor = new LSPaneEditor(switcherWidget);
 
-	m_tabWidget->addTab(gsplit, "Scene Graph");
+	m_paneEditorSwitcher->addWidget(new QLabel("Choose a pane to edit from the left.", switcherWidget));
+	m_paneEditorSwitcher->addWidget(m_paneEditor);
+
+	m_sceneSplitter->addWidget(w);
+	m_sceneSplitter->addWidget(switcherWidget);
+	m_sceneSplitter->setCollapsible(1, false);
+
+	m_tabWidget->addTab(m_sceneSplitter, "Scene Graph");
 
 
 	// get the resource
@@ -125,8 +131,11 @@ LSLayoutWindow::~LSLayoutWindow() {
 
 
 void LSLayoutWindow::selectedPaneChanged(const QModelIndex &current, const QModelIndex &previous) {
+	(void)previous;
 	LYTPane *pane = (LYTPane*)current.internalPointer();
+
 	m_paneEditor->setPane(pane);
+	m_paneEditorSwitcher->setCurrentIndex(1);
 }
 
 

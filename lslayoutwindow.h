@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QListView>
+#include <QSplitter>
 #include "lyt/packagebase.h"
 #include "lyt/layout.h"
 class LSPaneEditor;
@@ -38,12 +39,15 @@ private:
 	QDoubleSpinBox *m_widthBox, *m_heightBox;
 
 	// scene graph
+	QSplitter *m_sceneSplitter;
+
 	QStackedLayout *m_sceneListSwitcher;
 	QLineEdit *m_searchBox;
 	QPushButton *m_clearSearchButton;
 	QTreeView *m_sceneGraph;
 	QListView *m_sceneSearchList;
 
+	QStackedLayout *m_paneEditorSwitcher;
 	LSPaneEditor *m_paneEditor;
 
 	bool m_loadingSettings;
