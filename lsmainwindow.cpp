@@ -52,6 +52,11 @@ void LSMainWindow::createActions() {
 	m_saveAction = new QAction("&Save", this);
 	m_saveArchiveAsAction = new QAction("Save Archive &As...", this);
 
+	m_newArchiveAction->setShortcuts(QKeySequence::New);
+	m_openArchiveAction->setShortcuts(QKeySequence::Open);
+	m_saveAction->setShortcuts(QKeySequence::Save);
+	m_saveArchiveAsAction->setShortcuts(QKeySequence::SaveAs);
+
 	connect(m_newArchiveAction, SIGNAL(triggered()), SLOT(newArchive()));
 	connect(m_openArchiveAction, SIGNAL(triggered()), SLOT(openArchive()));
 	connect(m_saveAction, SIGNAL(triggered()), SLOT(save()));
@@ -252,7 +257,7 @@ void LSMainWindow::openArchive() {
 	setCurrentPackage(pkg);
 
 	m_dirty = false;
-	m_isSaved = false;
+	m_isSaved = true;
 	updateTitleBar();
 }
 
