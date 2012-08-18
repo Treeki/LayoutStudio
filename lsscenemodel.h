@@ -8,7 +8,7 @@
 class LSSceneModel : public QAbstractItemModel {
 	Q_OBJECT
 public:
-	explicit LSSceneModel(LYTLayout *layout, QObject *parent = 0);
+	explicit LSSceneModel(LYTLayout *layout, bool exposeVisibility, QObject *parent = 0);
 	~LSSceneModel();
 
 	LYTLayout *layout() const { return m_layout; }
@@ -18,6 +18,7 @@ public:
 	int rowCount(const QModelIndex &parent) const;
 	int columnCount(const QModelIndex &parent) const;
 	QVariant data(const QModelIndex &index, int role) const;
+	bool setData(const QModelIndex &index, const QVariant &value, int role);
 
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 	Qt::DropActions supportedDropActions() const;
@@ -32,8 +33,11 @@ private:
 
 	QPersistentModelIndex *m_movingPaneParent;
 	int m_movingPaneRow, m_movingPaneCount;
+
+	bool m_exposesVisibility;
 	
 signals:
+	void paneVisibilityChanged();
 	
 public slots:
 	

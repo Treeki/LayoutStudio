@@ -85,11 +85,13 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_widthBox->setValue(m_layout->width);
 	m_heightBox->setValue(m_layout->height);
 
+	LSSceneModel *scnModel = new LSSceneModel(m_layout, true, this);
+
 	m_sceneGraph->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	m_sceneGraph->setDragEnabled(true);
 	m_sceneGraph->setAcceptDrops(true);
 	m_sceneGraph->setDropIndicatorShown(true);
-	m_sceneGraph->setModel(new LSSceneModel(m_layout, this));
+	m_sceneGraph->setModel(scnModel);
 	m_sceneGraph->expandAll();
 	connect(m_sceneGraph->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectedPaneChanged(QModelIndex,QModelIndex)));
 
@@ -107,6 +109,7 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_renderer->show();
 
 	connect(m_paneEditor, SIGNAL(mustRedrawLayout()), m_renderer, SLOT(updateGL()));
+	connect(scnModel, SIGNAL(paneVisibilityChanged()), m_renderer, SLOT(updateGL()));
 
 	// clean up here
 	setAttribute(Qt::WA_DeleteOnClose);

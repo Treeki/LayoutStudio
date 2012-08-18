@@ -106,8 +106,8 @@ void LSPaneEditor::createPaneTab() {
 
 	m_widescreen = new QCheckBox("Widescreen", this);
 	connect(m_widescreen, SIGNAL(toggled(bool)), SLOT(handleWidescreenChanged(bool)));
-	m_visible = new QCheckBox("Visible", this);
-	connect(m_visible, SIGNAL(toggled(bool)), SLOT(handleVisibleChanged(bool)));
+	//m_visible = new QCheckBox("Visible", this);
+	//connect(m_visible, SIGNAL(toggled(bool)), SLOT(handleVisibleChanged(bool)));
 
 	// Column 0
 	gLayout->addWidget(new QLabel("Width:", geoBox), 0, 0, 1, 1);
@@ -123,7 +123,7 @@ void LSPaneEditor::createPaneTab() {
 
 	// Row 2
 	gLayout->addWidget(m_widescreen, 2, 0, 1, 2);
-	gLayout->addWidget(m_visible, 2, 2, 1, 2);
+	//gLayout->addWidget(m_visible, 2, 2, 1, 2);
 
 
 	// Positioning Box
@@ -192,7 +192,7 @@ void LSPaneEditor::setPane(LYTPane *pane) {
 	m_vertOrigin->setCurrentIndex((int)pane->vertOrigin);
 
 	m_widescreen->setChecked(pane->isWidescreen);
-	m_visible->setChecked(pane->visible);
+	//m_visible->setChecked(pane->visible);
 
 
 	m_transX->setValue(pane->xTrans);
@@ -274,12 +274,12 @@ void LSPaneEditor::handleWidescreenChanged(bool value) {
 	}
 }
 
-void LSPaneEditor::handleVisibleChanged(bool value) {
+/*void LSPaneEditor::handleVisibleChanged(bool value) {
 	if (!m_currentlyLoadingPane) {
 		m_pane->visible = value;
 		emit mustRedrawLayout();
 	}
-}
+}*/
 
 void LSPaneEditor::handleTransXChanged(double value) {
 	if (!m_currentlyLoadingPane) {

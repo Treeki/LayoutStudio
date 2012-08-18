@@ -36,7 +36,7 @@ private:
 
 	QDoubleSpinBox *m_width, *m_height;
 	QComboBox *m_horzOrigin, *m_vertOrigin;
-	QCheckBox *m_widescreen, *m_visible;
+	QCheckBox *m_widescreen; //, *m_visible;
 
 	QDoubleSpinBox *m_transX, *m_transY, *m_transZ;
 	QDoubleSpinBox *m_rotX, *m_rotY, *m_rotZ;
@@ -57,7 +57,7 @@ private slots:
 	void handleHorzOriginChanged(int value);
 	void handleVertOriginChanged(int value);
 	void handleWidescreenChanged(bool value);
-	void handleVisibleChanged(bool value);
+	//void handleVisibleChanged(bool value);
 	void handleTransXChanged(double value);
 	void handleTransYChanged(double value);
 	void handleTransZChanged(double value);

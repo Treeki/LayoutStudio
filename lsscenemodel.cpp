@@ -1,8 +1,8 @@
 #include "lsscenemodel.h"
 #include "lsglobals.h"
 
-LSSceneModel::LSSceneModel(LYTLayout *layout, QObject *parent) :
-	QAbstractItemModel(parent)
+LSSceneModel::LSSceneModel(LYTLayout *layout, bool exposeVisibility, QObject *parent) :
+	QAbstractItemModel(parent), m_exposesVisibility(exposeVisibility)
 {
 	m_layout = layout;
 
@@ -72,18 +72,40 @@ QVariant LSSceneModel::data(const QModelIndex &index, int role) const {
 		case Qt::DecorationRole:
 			return m_paneIcons[pane->type()];
 		}
+
+		if (m_exposesVisibility && role == Qt::CheckStateRole) {
+			return pane->visible ? Qt::Checked : Qt::Unchecked;
+		}
 	}
 	return QVariant();
+}
+
+bool LSSceneModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+	if (m_exposesVisibility && role == Qt::CheckStateRole) {
+		LYTPane *pane = (LYTPane*)index.internalPointer();
+
+		bool newVisible = value.toBool();
+		if (pane->visible != newVisible) {
+			pane->visible = newVisible;
+			emit dataChanged(index, index);
+			emit paneVisibilityChanged();
+		}
+	}
+
+	return false;
 }
 
 
 Qt::ItemFlags LSSceneModel::flags(const QModelIndex &index) const {
 	Qt::ItemFlags flag;
 	flag = Qt::ItemIsEnabled | Qt::ItemIsSelectable |
-			Qt::ItemIsDropEnabled | Qt::ItemIsEditable;
+			Qt::ItemIsDropEnabled;
 
 	if (index.isValid() && index.parent().isValid())
 		flag |= Qt::ItemIsDragEnabled;
+
+	if (m_exposesVisibility)
+		flag |= Qt::ItemIsUserCheckable;
 
 	return flag;
 }
