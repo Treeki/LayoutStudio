@@ -12,7 +12,7 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 
 	m_layoutName = layoutName;
 	m_package = pkg;
-
+	m_loadingSettings = true;
 
 	m_tabWidget = new QTabWidget(this);
 	setCentralWidget(m_tabWidget);
@@ -91,6 +91,7 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_sceneGraph->setDropIndicatorShown(true);
 	m_sceneGraph->setModel(new LSSceneModel(m_layout, this));
 	m_sceneGraph->expandAll();
+	connect(m_sceneGraph->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectedPaneChanged(QModelIndex,QModelIndex)));
 
 	setWindowTitle(m_layoutName);
 
@@ -105,8 +106,12 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 				Qt::WindowMinimizeButtonHint);
 	m_renderer->show();
 
+	connect(m_paneEditor, SIGNAL(mustRedrawLayout()), m_renderer, SLOT(updateGL()));
+
 	// clean up here
 	setAttribute(Qt::WA_DeleteOnClose);
+
+	m_loadingSettings = false;
 }
 
 LSLayoutWindow::~LSLayoutWindow() {
@@ -116,11 +121,21 @@ LSLayoutWindow::~LSLayoutWindow() {
 }
 
 
+void LSLayoutWindow::selectedPaneChanged(const QModelIndex &current, const QModelIndex &previous) {
+	LYTPane *pane = (LYTPane*)current.internalPointer();
+	m_paneEditor->setPane(pane);
+}
+
+
 void LSLayoutWindow::handleWidthChanged(double v) {
 	m_layout->width = v;
+	if (!m_loadingSettings)
+		m_renderer->updateGL();
 }
 
 void LSLayoutWindow::handleHeightChanged(double v) {
 	m_layout->height = v;
+	if (!m_loadingSettings)
+		m_renderer->updateGL();
 }
 

@@ -46,9 +46,12 @@ private:
 
 	LSPaneEditor *m_paneEditor;
 
+	bool m_loadingSettings;
+
 private slots:
 	void handleWidthChanged(double v);
 	void handleHeightChanged(double v);
+	void selectedPaneChanged(const QModelIndex &current, const QModelIndex &previous);
 
 signals:
 	
