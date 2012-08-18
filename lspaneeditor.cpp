@@ -1,4 +1,5 @@
 #include "lspaneeditor.h"
+#include "lstexcoordseteditor.h"
 #include <QGroupBox>
 
 #include "lyt/bounding.h"
@@ -37,6 +38,7 @@ LSPaneEditor::LSPaneEditor(QWidget *parent) :
 
 
 	createPaneTab();
+	createPictureTab();
 
 	m_currentlyLoadingPane = false;
 	m_pane = 0;
@@ -171,9 +173,32 @@ void LSPaneEditor::createPaneTab() {
 }
 
 
+void LSPaneEditor::createPictureTab() {
+	m_pictureTab = new QWidget(this);
+	m_tabs->addTab(m_pictureTab, "Picture");
+
+
+	QGroupBox *tcBox = new QGroupBox("Texture Coordinates", m_pictureTab);
+	QVBoxLayout *tcLayout = new QVBoxLayout(tcBox);
+
+	m_picTexCoordEditor = new LSTexCoordSetEditor(tcBox);
+	tcLayout->addWidget(m_picTexCoordEditor);
+
+	connect(m_picTexCoordEditor, SIGNAL(coordsEdited()), SIGNAL(mustRedrawLayout()));
+
+	// put it all together into one
+
+	QVBoxLayout *layout = new QVBoxLayout(m_pictureTab);
+	layout->addWidget(tcBox);
+	layout->addStretch(1);
+}
+
+
 void LSPaneEditor::setPane(LYTPane *pane) {
 	m_currentlyLoadingPane = true;
 	m_pane = pane;
+
+	// General pane tab
 
 	m_nameEntry->setText(pane->name);
 	m_userDataEntry->setText(pane->userdata);
@@ -202,6 +227,21 @@ void LSPaneEditor::setPane(LYTPane *pane) {
 
 	m_scaleX->setValue(pane->xScale);
 	m_scaleY->setValue(pane->yScale);
+
+
+	// Type-specific tabs
+
+	LYTPane::PaneTypes type = pane->type();
+	m_tabs->setTabEnabled(m_tabs->indexOf(m_pictureTab), type == LYTPane::PictureType);
+
+	switch (type) {
+	case LYTPane::PictureType:
+		LYTPicture *pic = (LYTPicture*)pane;
+
+		m_picTexCoordEditor->setCoordPtr(&pic->texCoords);
+
+		break;
+	}
 
 
 	m_currentlyLoadingPane = false;

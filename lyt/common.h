@@ -40,6 +40,14 @@ union Version {
 
 struct LYTTexCoords {
 	QPointF coord[4];
+
+	LYTTexCoords() {
+		// Sane defaults
+		coord[0] = QPointF(0.0f, 0.0f);
+		coord[1] = QPointF(1.0f, 0.0f);
+		coord[2] = QPointF(0.0f, 1.0f);
+		coord[3] = QPointF(1.0f, 1.0f);
+	}
 };
 
 

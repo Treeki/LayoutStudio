@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include "lyt/pane.h"
+class LSTexCoordSetEditor;
 
 class LSPaneEditor : public QWidget {
 	Q_OBJECT
@@ -52,7 +53,15 @@ private:
 		};
 	};
 
+	// Picture tab
+	QWidget *m_pictureTab;
+
+	LSTexCoordSetEditor *m_picTexCoordEditor;
+
+
 	void createPaneTab();
+	void createPictureTab();
+
 
 	bool m_currentlyLoadingPane;
 	LYTPane *m_pane;
