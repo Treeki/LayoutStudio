@@ -86,10 +86,10 @@ void LSPaneEditor::createPaneTab() {
 	gLayout = new QGridLayout(geoBox);
 
 	m_width = new QDoubleSpinBox(geoBox);
-	m_width->setRange(0.0, 100000.0);
+	m_width->setRange(-100000.0, 100000.0);
 	connect(m_width, SIGNAL(valueChanged(double)), SLOT(handleWidthChanged(double)));
 	m_height = new QDoubleSpinBox(geoBox);
-	m_height->setRange(0.0, 100000.0);
+	m_height->setRange(-100000.0, 100000.0);
 	connect(m_height, SIGNAL(valueChanged(double)), SLOT(handleHeightChanged(double)));
 
 	m_horzOrigin = new QComboBox(geoBox);
@@ -130,14 +130,15 @@ void LSPaneEditor::createPaneTab() {
 	QGroupBox *posBox = new QGroupBox("Positioning", m_paneTab);
 	gLayout = new QGridLayout(posBox);
 
-	m_transX = new QDoubleSpinBox(posBox);
-	m_transY = new QDoubleSpinBox(posBox);
-	m_transZ = new QDoubleSpinBox(posBox);
-	m_rotX = new QDoubleSpinBox(posBox);
-	m_rotY = new QDoubleSpinBox(posBox);
-	m_rotZ = new QDoubleSpinBox(posBox);
-	m_scaleX = new QDoubleSpinBox(posBox);
-	m_scaleY = new QDoubleSpinBox(posBox);
+	for (int i = 0; i < 8; i++) {
+		m_transSpinBoxes[i] = new QDoubleSpinBox(posBox);
+		m_transSpinBoxes[i]->setDecimals(3);
+		m_transSpinBoxes[i]->setRange(-100000.0, 100000.0);
+	}
+
+	for (int i = 0; i < 3; i++) {
+		m_rotSpinBoxes[i]->setSingleStep(10.0);
+	}
 
 	connect(m_transX, SIGNAL(valueChanged(double)), SLOT(handleTransXChanged(double)));
 	connect(m_transY, SIGNAL(valueChanged(double)), SLOT(handleTransYChanged(double)));

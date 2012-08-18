@@ -38,9 +38,19 @@ private:
 	QComboBox *m_horzOrigin, *m_vertOrigin;
 	QCheckBox *m_widescreen; //, *m_visible;
 
-	QDoubleSpinBox *m_transX, *m_transY, *m_transZ;
-	QDoubleSpinBox *m_rotX, *m_rotY, *m_rotZ;
-	QDoubleSpinBox *m_scaleX, *m_scaleY;
+	union {
+		QDoubleSpinBox *m_srtSpinBoxes[8];
+		struct {
+			QDoubleSpinBox *m_transSpinBoxes[3];
+			QDoubleSpinBox *m_rotSpinBoxes[3];
+			QDoubleSpinBox *m_scaleSpinBoxes[2];
+		};
+		struct {
+			QDoubleSpinBox *m_transX, *m_transY, *m_transZ;
+			QDoubleSpinBox *m_rotX, *m_rotY, *m_rotZ;
+			QDoubleSpinBox *m_scaleX, *m_scaleY;
+		};
+	};
 
 	void createPaneTab();
 
