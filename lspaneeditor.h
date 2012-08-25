@@ -14,6 +14,8 @@
 #include "lyt/pane.h"
 class LSTexCoordSetEditor;
 
+class LYTPicture;
+
 class LSPaneEditor : public QWidget {
 	Q_OBJECT
 public:
@@ -57,6 +59,7 @@ private:
 	QWidget *m_pictureTab;
 
 	LSTexCoordSetEditor *m_picTexCoordEditor;
+	QToolButton *m_picColourButtons[4];
 
 
 	void createPaneTab();
@@ -64,7 +67,10 @@ private:
 
 
 	bool m_currentlyLoadingPane;
-	LYTPane *m_pane;
+	union {
+		LYTPane *m_pane;
+		LYTPicture *m_picture;
+	};
 
 private slots:
 	void handleNameChanged(QString value);
@@ -85,6 +91,8 @@ private slots:
 	void handleRotZChanged(double value);
 	void handleScaleXChanged(double value);
 	void handleScaleYChanged(double value);
+
+	void handlePicColourClicked();
 
 signals:
 	void mustRedrawLayout();

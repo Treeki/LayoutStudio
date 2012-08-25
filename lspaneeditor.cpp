@@ -1,6 +1,7 @@
 #include "lspaneeditor.h"
 #include "lstexcoordseteditor.h"
 #include <QGroupBox>
+#include <QColorDialog>
 
 #include "lyt/bounding.h"
 #include "lyt/picture.h"
@@ -186,11 +187,50 @@ void LSPaneEditor::createPictureTab() {
 
 	connect(m_picTexCoordEditor, SIGNAL(coordsEdited()), SIGNAL(mustRedrawLayout()));
 
+
+	QGroupBox *vcBox = new QGroupBox("Vertex Colours", m_pictureTab);
+	QGridLayout *vcLayout = new QGridLayout(vcBox);
+
+	for (int i = 0; i < 4; i++) {
+		m_picColourButtons[i] = new QToolButton(this);
+		connect(m_picColourButtons[i], SIGNAL(clicked()), SLOT(handlePicColourClicked()));
+	}
+
+	vcLayout->addWidget(m_picColourButtons[0], 0, 0, 1, 1);
+	vcLayout->addWidget(m_picColourButtons[1], 0, 2, 1, 1);
+	vcLayout->addWidget(m_picColourButtons[2], 2, 0, 1, 1);
+	vcLayout->addWidget(m_picColourButtons[3], 2, 2, 1, 1);
+
+	// TODO: material
+
 	// put it all together into one
 
 	QVBoxLayout *layout = new QVBoxLayout(m_pictureTab);
 	layout->addWidget(tcBox);
+	layout->addWidget(vcBox);
 	layout->addStretch(1);
+}
+
+// dunno where to throw this right now
+// TODO: move it
+static QString niceColourName(const QColor &col) {
+	return QString("RGBA %1,%2,%3,%4 (#%5%6%7%8)")
+			.arg(col.red())
+			.arg(col.green())
+			.arg(col.blue())
+			.arg(col.alpha())
+			.arg(col.red(), 2, 16, (QChar)'0')
+			.arg(col.green(), 2, 16, (QChar)'0')
+			.arg(col.blue(), 2, 16, (QChar)'0')
+			.arg(col.alpha(), 2, 16, (QChar)'0');
+}
+
+static QString bgColourSheet(const QColor &col) {
+	return QString("QToolButton { background-color: rgba(%1,%2,%3,%4); }")
+			.arg(col.red())
+			.arg(col.green())
+			.arg(col.blue())
+			.arg(col.alpha());
 }
 
 
@@ -239,6 +279,13 @@ void LSPaneEditor::setPane(LYTPane *pane) {
 		LYTPicture *pic = (LYTPicture*)pane;
 
 		m_picTexCoordEditor->setCoordPtr(&pic->texCoords);
+
+		for (int i = 0; i < 4; i++) {
+			QToolButton *button = m_picColourButtons[i];
+
+			button->setStyleSheet(bgColourSheet(pic->vtxColours[i]));
+			button->setText(niceColourName(pic->vtxColours[i]));
+		}
 
 		break;
 	}
@@ -370,6 +417,34 @@ void LSPaneEditor::handleScaleXChanged(double value) {
 void LSPaneEditor::handleScaleYChanged(double value) {
 	if (!m_currentlyLoadingPane) {
 		m_pane->yScale = value;
+		emit mustRedrawLayout();
+	}
+}
+
+void LSPaneEditor::handlePicColourClicked() {
+	// make sure ...
+	if (m_pane->type() != LYTPane::PictureType)
+		return;
+
+	QToolButton *button = (QToolButton*)sender();
+	int index = -1;
+	for (int i = 0; i < 4; i++)
+		if (m_picColourButtons[i] == button) {
+			index = i;
+			break;
+		}
+
+	if (index == -1)
+		return;
+
+	QColor newcol = QColorDialog::getColor(m_picture->vtxColours[index], this);
+
+	if (newcol.isValid()) {
+		m_picture->vtxColours[index] = newcol;
+
+		button->setStyleSheet(bgColourSheet(newcol));
+		button->setText(niceColourName(newcol));
+
 		emit mustRedrawLayout();
 	}
 }
