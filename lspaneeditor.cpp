@@ -437,7 +437,11 @@ void LSPaneEditor::handlePicColourClicked() {
 	if (index == -1)
 		return;
 
-	QColor newcol = QColorDialog::getColor(m_picture->vtxColours[index], this);
+	QColor newcol = QColorDialog::getColor(
+				m_picture->vtxColours[index],
+				this,
+				"Choose a Vertex Colour",
+				QColorDialog::ShowAlphaChannel);
 
 	if (newcol.isValid()) {
 		m_picture->vtxColours[index] = newcol;
