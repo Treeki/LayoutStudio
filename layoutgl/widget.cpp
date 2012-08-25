@@ -469,14 +469,14 @@ void LGLWidget::drawQuad(float x, float y, float w, float h, int texCoordCount, 
 		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[3].x(), 1.0f-texCoords[i].coord[3].y());
 
 	if (colours)
-		glColor4ub(colours[2].red(), colours[2].green(), colours[2].blue(), (colours[2].alpha() * alpha) / 255);
+		glColor4ub(colours[3].red(), colours[3].green(), colours[3].blue(), (colours[3].alpha() * alpha) / 255);
 	glVertex2f(x + w, y - h);
 
 	for (int i = 0; i < texCoordCount; i++)
 		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[2].x(), 1.0f-texCoords[i].coord[2].y());
 
 	if (colours)
-		glColor4ub(colours[3].red(), colours[3].green(), colours[3].blue(), (colours[3].alpha() * alpha) / 255);
+		glColor4ub(colours[2].red(), colours[2].green(), colours[2].blue(), (colours[2].alpha() * alpha) / 255);
 	glVertex2f(x, y - h);
 
 	glEnd();
