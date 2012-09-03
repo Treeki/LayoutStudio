@@ -332,7 +332,7 @@ void LSPaneEditor::handleWidthChanged(double value) {
 
 void LSPaneEditor::handleHeightChanged(double value) {
 	if (!m_currentlyLoadingPane) {
-		m_pane->width = value;
+		m_pane->height = value;
 		emit mustRedrawLayout();
 	}
 }
