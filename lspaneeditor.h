@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include "lyt/pane.h"
+#include "lscolorpicker.h"
 class LSTexCoordSetEditor;
 
 class LYTPicture;
@@ -59,7 +60,7 @@ private:
 	QWidget *m_pictureTab;
 
 	LSTexCoordSetEditor *m_picTexCoordEditor;
-	QToolButton *m_picColourButtons[4];
+	LSColorPicker *m_picColourButtons[4];
 
 
 	void createPaneTab();
@@ -92,7 +93,7 @@ private slots:
 	void handleScaleXChanged(double value);
 	void handleScaleYChanged(double value);
 
-	void handlePicColourClicked();
+	void handlePicColourPicked(QColor value);
 
 signals:
 	void mustRedrawLayout();

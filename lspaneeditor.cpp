@@ -192,8 +192,8 @@ void LSPaneEditor::createPictureTab() {
 	QGridLayout *vcLayout = new QGridLayout(vcBox);
 
 	for (int i = 0; i < 4; i++) {
-		m_picColourButtons[i] = new QToolButton(this);
-		connect(m_picColourButtons[i], SIGNAL(clicked()), SLOT(handlePicColourClicked()));
+		m_picColourButtons[i] = new LSColorPicker(this);
+		connect(m_picColourButtons[i], SIGNAL(colorPicked(QColor,QColor)), SLOT(handlePicColourPicked(QColor)));
 	}
 
 	vcLayout->addWidget(m_picColourButtons[0], 0, 0, 1, 1);
@@ -209,28 +209,6 @@ void LSPaneEditor::createPictureTab() {
 	layout->addWidget(tcBox);
 	layout->addWidget(vcBox);
 	layout->addStretch(1);
-}
-
-// dunno where to throw this right now
-// TODO: move it
-static QString niceColourName(const QColor &col) {
-	return QString("RGBA %1,%2,%3,%4 (#%5%6%7%8)")
-			.arg(col.red())
-			.arg(col.green())
-			.arg(col.blue())
-			.arg(col.alpha())
-			.arg(col.red(), 2, 16, (QChar)'0')
-			.arg(col.green(), 2, 16, (QChar)'0')
-			.arg(col.blue(), 2, 16, (QChar)'0')
-			.arg(col.alpha(), 2, 16, (QChar)'0');
-}
-
-static QString bgColourSheet(const QColor &col) {
-	return QString("QToolButton { background-color: rgba(%1,%2,%3,%4); }")
-			.arg(col.red())
-			.arg(col.green())
-			.arg(col.blue())
-			.arg(col.alpha());
 }
 
 
@@ -281,10 +259,8 @@ void LSPaneEditor::setPane(LYTPane *pane) {
 		m_picTexCoordEditor->setCoordPtr(&pic->texCoords);
 
 		for (int i = 0; i < 4; i++) {
-			QToolButton *button = m_picColourButtons[i];
-
-			button->setStyleSheet(bgColourSheet(pic->vtxColours[i]));
-			button->setText(niceColourName(pic->vtxColours[i]));
+			LSColorPicker *button = m_picColourButtons[i];
+			button->setColor(pic->vtxColours[i]);
 		}
 
 		break;
@@ -421,12 +397,12 @@ void LSPaneEditor::handleScaleYChanged(double value) {
 	}
 }
 
-void LSPaneEditor::handlePicColourClicked() {
+void LSPaneEditor::handlePicColourPicked(QColor value) {
 	// make sure ...
 	if (m_pane->type() != LYTPane::PictureType)
 		return;
 
-	QToolButton *button = (QToolButton*)sender();
+	LSColorPicker *button = (LSColorPicker*)sender();
 	int index = -1;
 	for (int i = 0; i < 4; i++)
 		if (m_picColourButtons[i] == button) {
@@ -437,19 +413,8 @@ void LSPaneEditor::handlePicColourClicked() {
 	if (index == -1)
 		return;
 
-	QColor newcol = QColorDialog::getColor(
-				m_picture->vtxColours[index],
-				this,
-				"Choose a Vertex Colour",
-				QColorDialog::ShowAlphaChannel);
+	m_picture->vtxColours[index] = value;
 
-	if (newcol.isValid()) {
-		m_picture->vtxColours[index] = newcol;
-
-		button->setStyleSheet(bgColourSheet(newcol));
-		button->setText(niceColourName(newcol));
-
-		emit mustRedrawLayout();
-	}
+	emit mustRedrawLayout();
 }
 
