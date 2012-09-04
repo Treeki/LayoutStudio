@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     lslayoutwindow.cpp \
     lsscenemodel.cpp \
     lspaneeditor.cpp \
-    lstexcoordseteditor.cpp
+    lstexcoordseteditor.cpp \
+    lsmaterialeditor.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -79,7 +80,8 @@ HEADERS += lsmainwindow.h \
     lslayoutwindow.h \
     lsscenemodel.h \
     lspaneeditor.h \
-    lstexcoordseteditor.h
+    lstexcoordseteditor.h \
+    lsmaterialeditor.h
 FORMS +=
 RESOURCES += resources.qrc
 

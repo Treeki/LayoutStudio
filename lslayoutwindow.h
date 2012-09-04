@@ -13,6 +13,7 @@
 #include "lyt/packagebase.h"
 #include "lyt/layout.h"
 class LSPaneEditor;
+class LSMaterialEditor;
 class LGLWidget;
 
 class LSLayoutWindow : public QMainWindow {
@@ -52,10 +53,20 @@ private:
 
 	bool m_loadingSettings;
 
+	// material things
+	QSplitter *m_materialSplitter;
+
+	QListView *m_materialList;
+	QPushButton *m_addMaterialButton;
+	QPushButton *m_removeMaterialButton;
+
+	LSMaterialEditor *m_materialEditor;
+
 private slots:
 	void handleWidthChanged(double v);
 	void handleHeightChanged(double v);
 	void selectedPaneChanged(const QModelIndex &current, const QModelIndex &previous);
+	void selectedMaterialChanged(const QModelIndex &current, const QModelIndex &previous);
 
 signals:
 	

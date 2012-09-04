@@ -1,6 +1,7 @@
 #include "lslayoutwindow.h"
 #include "lsscenemodel.h"
 #include "lspaneeditor.h"
+#include "lsmaterialeditor.h"
 #include "layoutgl/widget.h"
 #include <QGridLayout>
 #include <QFormLayout>
@@ -39,11 +40,9 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	connect(m_heightBox, SIGNAL(valueChanged(double)), SLOT(handleHeightChanged(double)));
 
 
-	QGroupBox *matGroup = new QGroupBox("Materials", this);
 	QGroupBox *grpGroup = new QGroupBox("Groups", this);
 
-	sgrid->addWidget(matGroup, 1, 0, 1, 1);
-	sgrid->addWidget(grpGroup, 1, 1, 1, 1);
+	sgrid->addWidget(grpGroup, 1, 0, 1, 2);
 	sgrid->setRowStretch(1, 1);
 
 	m_tabWidget->addTab(w, "Layout");
@@ -83,6 +82,29 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_sceneSplitter->setCollapsible(1, false);
 
 	m_tabWidget->addTab(m_sceneSplitter, "Scene Graph");
+
+
+	// prepare the materials tab
+	m_materialSplitter = new QSplitter(this);
+
+	w = new QWidget(this);
+	QGridLayout *mgrid = new QGridLayout(w);
+
+	m_addMaterialButton = new QPushButton("Add", w);
+	m_removeMaterialButton = new QPushButton("Remove", w);
+	m_materialList = new QListView(w);
+
+	mgrid->addWidget(m_materialList, 0, 0, 1, 2);
+	mgrid->addWidget(m_addMaterialButton, 1, 0, 1, 1);
+	mgrid->addWidget(m_removeMaterialButton, 1, 1, 1, 1);
+
+	m_materialEditor = new LSMaterialEditor(m_materialSplitter);
+
+	m_materialSplitter->addWidget(w);
+	m_materialSplitter->addWidget(m_materialEditor);
+	m_materialSplitter->setCollapsible(1, false);
+
+	m_tabWidget->addTab(m_materialSplitter, "Materials");
 
 
 	// get the resource
@@ -136,6 +158,10 @@ void LSLayoutWindow::selectedPaneChanged(const QModelIndex &current, const QMode
 
 	m_paneEditor->setPane(pane);
 	m_paneEditorSwitcher->setCurrentIndex(1);
+}
+
+void LSLayoutWindow::selectedMaterialChanged(const QModelIndex &current, const QModelIndex &previous) {
+
 }
 
 
