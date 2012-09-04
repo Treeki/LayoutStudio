@@ -35,7 +35,7 @@ void LSColorPicker::refreshButton() {
 				  .arg(m_color.blue())
 				  .arg(m_color.alpha()));
 
-	setText(QString("RGBA %1,%2,%3,%4 (#%5%6%7%8)")
+	setText(QString("RGBA (#%5%6%7%8)\n%1,%2,%3,%4")
 			.arg(m_color.red())
 			.arg(m_color.green())
 			.arg(m_color.blue())
