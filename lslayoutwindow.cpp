@@ -1,5 +1,6 @@
 #include "lslayoutwindow.h"
 #include "lsscenemodel.h"
+#include "lsmaterialmodel.h"
 #include "lspaneeditor.h"
 #include "lsmaterialeditor.h"
 #include "layoutgl/widget.h"
@@ -123,6 +124,12 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	m_sceneGraph->expandAll();
 	connect(m_sceneGraph->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectedPaneChanged(QModelIndex,QModelIndex)));
 
+	LSMaterialModel *matModel = new LSMaterialModel(&m_layout->materials, this);
+
+	m_materialList->setSelectionMode(QAbstractItemView::SingleSelection);
+	m_materialList->setModel(matModel);
+	connect(m_materialList->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectedMaterialChanged(QModelIndex,QModelIndex)));
+
 	setWindowTitle(m_layoutName);
 
 
@@ -161,7 +168,10 @@ void LSLayoutWindow::selectedPaneChanged(const QModelIndex &current, const QMode
 }
 
 void LSLayoutWindow::selectedMaterialChanged(const QModelIndex &current, const QModelIndex &previous) {
+	(void)previous;
+	LYTMaterial *mat = m_layout->materials.getMaterialByIndex(current.row());
 
+	m_materialEditor->setMaterial(mat);
 }
 
 
