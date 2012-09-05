@@ -7,6 +7,17 @@
 #include <QLineEdit>
 #include "lyt/materials/materialcontainer.h"
 #include "lscolorpicker.h"
+#include "lsseteditor.h"
+
+class LSTevStageEditor : public LSSetEntryEditorBase<LYTTevStage> {
+	Q_OBJECT
+public:
+	explicit LSTevStageEditor(QWidget *parent = 0) :
+		LSSetEntryEditorBase(parent) { }
+
+	void loadEntryFrom(const LYTTevStage &entry) {
+	}
+};
 
 class LSMaterialEditor : public QWidget {
 	Q_OBJECT
@@ -20,6 +31,8 @@ private:
 
 	bool m_currentlyLoadingMaterial;
 	LYTMaterial *m_material;
+
+	LSSetEditor<LYTTevStage, LSTevStageEditor> *m_tevStageSetEditor;
 
 private slots:
 	void handleNameChanged(QString value);

@@ -43,7 +43,8 @@ SOURCES += main.cpp \
     lstexcoordseteditor.cpp \
     lsmaterialeditor.cpp \
     lscolorpicker.cpp \
-    lsmaterialmodel.cpp
+    lsmaterialmodel.cpp \
+    lsseteditor.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -85,7 +86,8 @@ HEADERS += lsmainwindow.h \
     lstexcoordseteditor.h \
     lsmaterialeditor.h \
     lscolorpicker.h \
-    lsmaterialmodel.h
+    lsmaterialmodel.h \
+    lsseteditor.h
 FORMS +=
 RESOURCES += resources.qrc
 
