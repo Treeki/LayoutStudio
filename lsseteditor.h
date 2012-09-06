@@ -15,17 +15,23 @@ signals:
 	void dataEdited();
 };
 
+// class prototype
+template <typename TData, typename TWidget>
+class LSSetEditor;
+
 template <typename TData>
 class LSSetEntryEditorBase : public _LSSetEntryEditorBaseBase {
 protected:
 	explicit LSSetEntryEditorBase(QWidget *parent = 0) :
 		_LSSetEntryEditorBaseBase(parent) { }
 
-private:
-	void setCurrentEntry(TData &entry);
-	// what??
-	//friend class LSSetEditor<TData, LSSetEntryEditorBase<TData> >;
+public:
+	void setCurrentEntry(TData &entry) {
+		m_currentEntry = &entry;
+		loadEntryFrom(entry);
+	}
 
+private:
 	TData *m_currentEntry;
 
 protected:
@@ -74,6 +80,9 @@ public:
 		TWidget *w = new TWidget(this);
 		setup(w);
 
+		m_setEditorWidget = w;
+		m_typedSetEditorWidget = w;
+
 		LSSetEntryEditorBase<TData> *checkMe = w;
 		connect(checkMe, SIGNAL(dataEdited()), SIGNAL(dataEdited()));
 	}
@@ -93,6 +102,7 @@ public:
 
 protected:
 	QList<TData> *m_data;
+	TWidget *m_typedSetEditorWidget;
 
 	void changeEntryCountTo(int count) {
 		m_loadingThings++;
@@ -137,7 +147,8 @@ protected:
 		if (index == -1) {
 			m_setEditorWidget->setEnabled(false);
 		} else {
-			const TData &entry = m_data->at(index);
+			TData &entry = (*m_data)[index];
+			m_typedSetEditorWidget->setCurrentEntry(entry);
 		}
 	}
 };
