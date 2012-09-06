@@ -9,15 +9,12 @@
 #include "lscolorpicker.h"
 #include "lsseteditor.h"
 
-class LSTevStageEditor : public LSSetEntryEditorBase<LYTTevStage> {
-	Q_OBJECT
-public:
-	explicit LSTevStageEditor(QWidget *parent = 0) :
-		LSSetEntryEditorBase(parent) { }
-
-	void loadEntryFrom(const LYTTevStage &entry) {
-	}
-};
+class LSTexMapEditor;
+class LSTexSRTEditor;
+class LSTexCoordGenEditor;
+class LSIndTexSRTEditor;
+class LSIndTexStageEditor;
+class LSTevStageEditor;
 
 class LSMaterialEditor : public QWidget {
 	Q_OBJECT

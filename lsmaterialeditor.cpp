@@ -1,4 +1,5 @@
 #include "lsmaterialeditor.h"
+#include "lsmaterialeditors.h"
 #include <QGroupBox>
 
 LSMaterialEditor::LSMaterialEditor(QWidget *parent) :
@@ -17,7 +18,7 @@ LSMaterialEditor::LSMaterialEditor(QWidget *parent) :
 	QGroupBox *tevCBox = new QGroupBox("TEV Colours", this);
 	QGridLayout *tevCLayout = new QGridLayout(tevCBox);
 
-	tevCLayout->addWidget(new QLabel("Registers:", tevCBox), 0, 0, 1, 4);
+	tevCLayout->addWidget(new QLabel("Initial Registers:", tevCBox), 0, 0, 1, 4);
 	tevCLayout->addWidget(new QLabel("Constant:", tevCBox), 2, 0, 1, 4);
 
 	for (int i = 0; i < 7; i++) {
@@ -33,7 +34,7 @@ LSMaterialEditor::LSMaterialEditor(QWidget *parent) :
 	QGroupBox *stageBox = new QGroupBox("TEV Stages", this);
 	QVBoxLayout *stageLayout = new QVBoxLayout(stageBox);
 
-	m_tevStageSetEditor = new LSSetEditor<LYTTevStage, LSTevStageEditor>(8, stageBox);
+	m_tevStageSetEditor = new LSSetEditor<LYTTevStage, LSTevStageEditor>(16, stageBox);
 	stageLayout->addWidget(m_tevStageSetEditor);
 
 	grid->addWidget(stageBox, gridRow, 0, 1, 2);

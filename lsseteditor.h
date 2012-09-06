@@ -147,6 +147,7 @@ protected:
 		if (index == -1) {
 			m_setEditorWidget->setEnabled(false);
 		} else {
+			m_setEditorWidget->setEnabled(true);
 			TData &entry = (*m_data)[index];
 			m_typedSetEditorWidget->setCurrentEntry(entry);
 		}

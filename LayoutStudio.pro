@@ -87,7 +87,8 @@ HEADERS += lsmainwindow.h \
     lsmaterialeditor.h \
     lscolorpicker.h \
     lsmaterialmodel.h \
-    lsseteditor.h
+    lsseteditor.h \
+    lsmaterialeditors.h
 FORMS +=
 RESOURCES += resources.qrc
 

@@ -7,6 +7,7 @@
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QGroupBox>
+#include <QScrollArea>
 
 LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, QWidget *parent) :
 	QMainWindow(parent) {
@@ -99,11 +100,14 @@ LSLayoutWindow::LSLayoutWindow(LYTPackageBase *pkg, const QString &layoutName, Q
 	mgrid->addWidget(m_addMaterialButton, 1, 0, 1, 1);
 	mgrid->addWidget(m_removeMaterialButton, 1, 1, 1, 1);
 
-	m_materialEditor = new LSMaterialEditor(m_materialSplitter);
+	QScrollArea *matScroller = new QScrollArea(m_materialSplitter);
+	m_materialEditor = new LSMaterialEditor(matScroller);
 
 	m_materialSplitter->addWidget(w);
-	m_materialSplitter->addWidget(m_materialEditor);
+	m_materialSplitter->addWidget(matScroller);
 	m_materialSplitter->setCollapsible(1, false);
+
+	matScroller->setWidget(m_materialEditor);
 
 	m_tabWidget->addTab(m_materialSplitter, "Materials");
 
