@@ -4,6 +4,12 @@ LGLWidget::LGLWidget(QWidget *parent) :
 	QGLWidget(parent), m_layout(0) {
 }
 
+// I hate Windows.
+#ifdef WIN32
+typedef void (*PFNGLMULTITEXCOORD2FPROC) (GLenum target, GLfloat s, GLfloat t);
+PFNGLMULTITEXCOORD2FPROC glMultiTexCoord2f;
+#endif
+
 
 void LGLWidget::setLayout(LYTLayout *layout) {
 	// TODO: cleanup stuff for previous layout
@@ -14,6 +20,11 @@ void LGLWidget::setLayout(LYTLayout *layout) {
 
 
 void LGLWidget::initializeGL() {
+	initializeGLFunctions(context());
+#ifdef WIN32
+	glMultiTexCoord2f = (PFNGLMULTITEXCOORD2FPROC)context()->getProcAddress("glMultiTexCoord2f");
+#endif
+
 	qDebug() << "initialising GL";
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glEnable(GL_TEXTURE_2D);
@@ -411,7 +422,7 @@ void LGLWidget::useMaterial(const LYTMaterial &mat) {
 		const QString &texName = texMap.textureName;
 		GLuint texID = m_texMgr.glTextureForName(texName);
 
-		glActiveTexture(GL_TEXTURE0 + i);
+        glActiveTexture(GL_TEXTURE0 + i);
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GLWrapModes[texMap.wrap_s]);
@@ -452,28 +463,28 @@ void LGLWidget::drawQuad(float x, float y, float w, float h, int texCoordCount, 
 	glBegin(GL_QUADS);
 
 	for (int i = 0; i < texCoordCount; i++)
-		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[0].x(), 1.0f-texCoords[i].coord[0].y());
+		glMultiTexCoord2f(GL_TEXTURE0+i, texCoords[i].coord[0].x(), 1.0f-texCoords[i].coord[0].y());
 
 	if (colours)
 		glColor4ub(colours[0].red(), colours[0].green(), colours[0].blue(), (colours[0].alpha() * alpha) / 255);
 	glVertex2f(x, y);
 
 	for (int i = 0; i < texCoordCount; i++)
-		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[1].x(), 1.0f-texCoords[i].coord[1].y());
+		glMultiTexCoord2f(GL_TEXTURE0+i, texCoords[i].coord[1].x(), 1.0f-texCoords[i].coord[1].y());
 
 	if (colours)
 		glColor4ub(colours[1].red(), colours[1].green(), colours[1].blue(), (colours[1].alpha() * alpha) / 255);
 	glVertex2f(x + w, y);
 
 	for (int i = 0; i < texCoordCount; i++)
-		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[3].x(), 1.0f-texCoords[i].coord[3].y());
+		glMultiTexCoord2f(GL_TEXTURE0+i, texCoords[i].coord[3].x(), 1.0f-texCoords[i].coord[3].y());
 
 	if (colours)
 		glColor4ub(colours[3].red(), colours[3].green(), colours[3].blue(), (colours[3].alpha() * alpha) / 255);
 	glVertex2f(x + w, y - h);
 
 	for (int i = 0; i < texCoordCount; i++)
-		glMultiTexCoord2f(GL_TEXTURE0_ARB+i, texCoords[i].coord[2].x(), 1.0f-texCoords[i].coord[2].y());
+		glMultiTexCoord2f(GL_TEXTURE0+i, texCoords[i].coord[2].x(), 1.0f-texCoords[i].coord[2].y());
 
 	if (colours)
 		glColor4ub(colours[2].red(), colours[2].green(), colours[2].blue(), (colours[2].alpha() * alpha) / 255);

@@ -6,6 +6,8 @@ LGLTextureManager::LGLTextureManager() {
 void LGLTextureManager::setup(QGLWidget *gl, const LYTLayout *layout) {
 	// TODO: code to cleanup previous stuff
 
+	initializeGLFunctions();
+
 	//m_gl = gl;
 	m_layout = layout;
 	m_package = &layout->package();

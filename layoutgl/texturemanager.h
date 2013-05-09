@@ -4,9 +4,10 @@
 #include "wii/texpalette.h"
 #include "lyt/layout.h"
 #include <QGLContext>
+#include <QGLFunctions>
 #include <QHash>
 
-class LGLTextureManager {
+class LGLTextureManager : protected QGLFunctions {
 public:
 	LGLTextureManager();
 

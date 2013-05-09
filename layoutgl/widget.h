@@ -2,11 +2,12 @@
 #define WIDGET_H
 
 #include <QGLWidget>
+#include <QGLFunctions>
 
 #include "lyt/layout.h"
 #include "layoutgl/texturemanager.h"
 
-class LGLWidget : public QGLWidget
+class LGLWidget : public QGLWidget, protected QGLFunctions
 {
 	Q_OBJECT
 public:
