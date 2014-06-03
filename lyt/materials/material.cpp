@@ -94,7 +94,7 @@ void LYTMaterial::writeToDataStream(QDataStream &out) const {
 	WriteFixedLengthASCII(out, name, 0x14);
 
 	for (int i = 0; i < 3; i++)
-		WriteS10Color(this->colours[i], out);
+		WriteRGBA8Color(this->colours[i], out);
 
 	for (int i = 0; i < 4; i++)
 		WriteRGBA8Color(this->tevKColour[i], out);
@@ -176,7 +176,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 	name = ReadFixedLengthASCII(in, 0x14);
 
 	for (int i = 0; i < 3; i++)
-		ReadS10Color(this->colours[i], in);
+		ReadRGBA8Color(this->colours[i], in);
 
 	for (int i = 0; i < 4; i++)
 		ReadRGBA8Color(this->tevKColour[i], in);
@@ -185,6 +185,8 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 	quint32 resNumValue;
 	in >> (quint32&)resNumValue;
 	LYTMaterialResourceNum resourceNum(resNumValue);
+
+	qDebug() << "[[ resNum : " << resNumValue << "]]";
 
 	// this is really complicated -_-
 	// first off: TexMap
@@ -208,7 +210,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 		this->readTexCoordGen(in);
 	}
 
-	// ChanCtrl
+	/*// ChanCtrl
 	if (resourceNum.hasChanCtrl()) {
 		this->hasChanCtrl = true;
 		this->chanCtrl.readFromDataStream(in);
@@ -267,7 +269,7 @@ void LYTMaterial::readFromDataStream(QDataStream &in) {
 		this->blendMode.readFromDataStream(in);
 	} else {
 		this->hasBlendMode = false;
-	}
+	}*/
 }
 
 

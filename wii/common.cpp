@@ -54,7 +54,6 @@ QStringList ReadStringList(QDataStream &in) {
 	for (int i = 0; i < count; i++) {
 		quint32 offset;
 		in >> (quint32&)offset;
-		in.skipRawData(4); // unused?
 
 		stringOffsets[i] = offset;
 	}

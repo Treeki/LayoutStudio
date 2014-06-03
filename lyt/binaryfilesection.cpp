@@ -39,7 +39,12 @@ void LYTBinaryFileSection::writeToDataStream(QDataStream &out) const {
 void LYTBinaryFileSection::readFromDataStream(QDataStream &in) {
 	quint32 length;
 
-	in >> (quint32&)magic.value;
+	char a[4];
+	in.readRawData(a, 4);
+	magic.str[0] = a[3];
+	magic.str[1] = a[2];
+	magic.str[2] = a[1];
+	magic.str[3] = a[0];
 	in >> (quint32&)length;
 
 	char *raw = new char[length - 8];

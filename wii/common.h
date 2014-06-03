@@ -98,7 +98,7 @@ inline void WritePointF(QDataStream &stream, const QPointF &point) {
 }
 
 inline void InitDataStream(QDataStream &stream) {
-	stream.setByteOrder(QDataStream::BigEndian);
+	stream.setByteOrder(QDataStream::LittleEndian);
 	stream.setVersion(QDataStream::Qt_4_5);
 }
 

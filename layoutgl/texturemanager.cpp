@@ -1,4 +1,5 @@
 #include "texturemanager.h"
+#include "ctr/image.h"
 
 LGLTextureManager::LGLTextureManager() {
 }
@@ -16,12 +17,16 @@ void LGLTextureManager::setup(QGLWidget *gl, const LYTLayout *layout) {
 		qDebug() << texName;
 
 		QByteArray tplData = m_package->getTexture(texName);
+		if (tplData.isEmpty()) {
+			qDebug() << "[[[ NON-EXISTENT TEXTURE! ]]]";
+			continue;
+		}
 
 		QDataStream tplStream(tplData);
-		WiiTexPalette tpl(tplStream);
+		CTRImageCollection tpl(tplStream);
 
-		const QImage &image = tpl.textures.first().image;
-		image.save(QString("tpl/%2__%1.png").arg(texName).arg((int)tpl.textures.first().format));
+		const QImage &image = tpl.images.first().image;
+		image.save(QString("tpl/%2__%1.png").arg(texName).arg((int)tpl.images.first().format));
 		// dirty, dirty hack, TODO: FIXME
 		GLuint tex = gl->bindTexture(image, GL_TEXTURE_2D);
 

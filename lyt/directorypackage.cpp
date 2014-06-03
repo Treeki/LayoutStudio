@@ -74,6 +74,11 @@ bool LYTDirectoryPackage::write(ItemType type, const QString &name, const QByteA
     return false;
 }
 
+bool LYTDirectoryPackage::rename(ItemType type, const QString &from, const QString &to) {
+	// Not implemented
+	return false;
+}
+
 bool LYTDirectoryPackage::remove(ItemType type, const QString &name) {
 	QDir search(m_path);
 

@@ -41,6 +41,7 @@ public slots:
     void openArchive();
     void save();
     void saveArchiveAs();
+	void openDir();
 
 private slots:
 	void handleAddSomething(int whatToAdd);
@@ -54,6 +55,7 @@ private:
 
 	void createActions();
 	QAction *m_newArchiveAction, *m_openArchiveAction, *m_saveArchiveAsAction;
+	QAction *m_openDirAction;
 	QAction *m_saveAction;
 
 	QAction *m_addLayoutAction, *m_addAnimationAction;

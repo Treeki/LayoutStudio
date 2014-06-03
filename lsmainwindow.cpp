@@ -22,6 +22,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include "lyt/archivepackage.h"
+#include "lyt/directorypackage.h"
 #include "lslayoutwindow.h"
 
 LSMainWindow::LSMainWindow(QWidget *parent) : QMainWindow(parent) {
@@ -51,6 +52,7 @@ void LSMainWindow::createActions() {
 	m_openArchiveAction = new QAction("&Open Archive...", this);
 	m_saveAction = new QAction("&Save", this);
 	m_saveArchiveAsAction = new QAction("Save Archive &As...", this);
+	m_openDirAction = new QAction("Open Directory...", this);
 
 	m_newArchiveAction->setShortcuts(QKeySequence::New);
 	m_openArchiveAction->setShortcuts(QKeySequence::Open);
@@ -61,6 +63,7 @@ void LSMainWindow::createActions() {
 	connect(m_openArchiveAction, SIGNAL(triggered()), SLOT(openArchive()));
 	connect(m_saveAction, SIGNAL(triggered()), SLOT(save()));
 	connect(m_saveArchiveAsAction, SIGNAL(triggered()), SLOT(saveArchiveAs()));
+	connect(m_openDirAction, SIGNAL(triggered()), SLOT(openDir()));
 
 	m_addLayoutAction = new QAction("New &Layout...", this);
 	m_addAnimationAction = new QAction("New &Animation...", this);
@@ -92,6 +95,7 @@ void LSMainWindow::createActions() {
 	m->addAction(m_openArchiveAction);
 	m->addAction(m_saveAction);
 	m->addAction(m_saveArchiveAsAction);
+	m->addAction(m_openDirAction);
 
 	m = bar->addMenu("&Edit");
 	m->addAction(m_addLayoutAction);
@@ -286,6 +290,21 @@ void LSMainWindow::saveArchiveAs() {
 	LYTArchivePackage *pkg = (LYTArchivePackage*)m_package;
 	pkg->setFilename(newPath);
 	pkg->savePackage();
+
+	m_dirty = false;
+	m_isSaved = true;
+	updateTitleBar();
+}
+
+void LSMainWindow::openDir() {
+	QString path = QFileDialog::getExistingDirectory(this,
+													 "Choose Archive Directory");
+
+	if (path.isEmpty())
+		return;
+
+	LYTDirectoryPackage *pkg = new LYTDirectoryPackage(path);
+	setCurrentPackage(pkg);
 
 	m_dirty = false;
 	m_isSaved = true;

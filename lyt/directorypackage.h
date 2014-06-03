@@ -34,6 +34,7 @@ public:
 	QStringList list(ItemType type) const;
 	QByteArray get(ItemType type, const QString &name) const;
 	bool write(ItemType type, const QString &name, const QByteArray &data);
+	bool rename(ItemType type, const QString &from, const QString &to);
 	bool remove(ItemType type, const QString &name);
 
 	bool needsExplicitSave() const { return false; }

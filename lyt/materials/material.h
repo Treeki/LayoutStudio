@@ -45,9 +45,9 @@ public:
 
 	quint32 value() const { return m_value; }
 
-	int getTexMapNum()		const { return BitExtract(m_value, 4, 28); }
-	int getTexSRTNum()		const { return BitExtract(m_value, 4, 24); }
-	int getTexCoordGenNum()	const { return BitExtract(m_value, 4, 20); }
+	int getTexMapNum()		const { return BitExtract(m_value, 2, 30); }
+	int getTexSRTNum()		const { return BitExtract(m_value, 2, 28); }
+	int getTexCoordGenNum()	const { return BitExtract(m_value, 2, 26); }
 	bool hasChanCtrl()		const { return BitExtract(m_value, 1, 6);  }
 	bool hasMatCol()		const { return BitExtract(m_value, 1, 4);  }
 	bool hasTevSwapTable()	const { return BitExtract(m_value, 1, 19); }

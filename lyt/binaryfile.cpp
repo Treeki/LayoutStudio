@@ -28,14 +28,15 @@ LYTBinaryFile::LYTBinaryFile(QByteArray data) : magic(0), version(0) {
 	QDataStream reader(data);
 	InitDataStream(reader);
 
-	quint16 endian, firstSectionOffset, sectionCount;
+	quint16 endian, firstSectionOffset;
+	quint32 sectionCount;
 	quint32 fileSize;
 
 	reader >> this->magic.value;
 	reader >> endian;
+	reader >> firstSectionOffset;
 	reader >> this->version.value;
 	reader >> fileSize;
-	reader >> firstSectionOffset;
 	reader >> sectionCount;
 
 	LYTBinaryFileSection section;

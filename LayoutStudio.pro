@@ -44,7 +44,9 @@ SOURCES += main.cpp \
     lsmaterialeditor.cpp \
     lscolorpicker.cpp \
     lsmaterialmodel.cpp \
-    lsseteditor.cpp
+    lsseteditor.cpp \
+    ctr/image.cpp \
+    ctr/rg_etc1.cpp
 HEADERS += lsmainwindow.h \
     lsglobals.h \
     lyt/packagebase.h \
@@ -88,7 +90,9 @@ HEADERS += lsmainwindow.h \
     lscolorpicker.h \
     lsmaterialmodel.h \
     lsseteditor.h \
-    lsmaterialeditors.h
+    lsmaterialeditors.h \
+    ctr/image.h \
+    ctr/rg_etc1.h
 FORMS +=
 RESOURCES += resources.qrc
 
